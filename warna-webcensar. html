@@ -1,0 +1,1751 @@
+
+
+<!DOCTYPE html>
+<html lang="en" class="grey lighten-5">
+
+<head>
+
+  <meta charset="UTF-8">
+  <link rel="shortcut icon" type="image/x-icon" href="https://static.codepen.io/assets/favicon/favicon-8ea04875e70c4b0bb41da869e81236e54394d63638a1ef12fa558a4a835f1164.ico" />
+  <link rel="mask-icon" type="" href="https://static.codepen.io/assets/favicon/logo-pin-f2d2b6d2c61838f7e76325261b7195c27224080bc099486ddd6dccb469b8e8e6.svg" color="#111" />
+  <title>CodePen - Material color Picker</title>
+  
+  
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+
+  <link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css'>
+<link rel='stylesheet prefetch' href='https://fonts.googleapis.com/icon?family=Material+Icons'>
+
+      <style>
+      body {
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+@media (max-width: 600px) {
+  body {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+h1 {
+  font-size: 2.5rem;
+}
+
+/* カラーパレット*/
+#color-palette table {
+    border-collapse: separate;
+  }
+/* border-spacing: 1px; */
+#color-palette table thead th {
+        vertical-align: bottom;
+        line-height: 1.4;
+        color: #bdbdbd;
+        font-size: 0.9rem;
+        padding-top: 0;
+        padding-bottom: 5px;
+        border-radius: 0;
+      }
+/* 選択中 */
+#color-palette table thead th.active {
+          color: #424242;
+          background-color: #cfd8dc;
+        }
+#color-palette table tbody {
+      height: 300px;
+      overflow: auto;
+    }
+#color-palette table tbody th {
+        width: 80px;
+        color: #424242;
+        line-height: 1.2;
+        text-transform: capitalize;
+        border-radius: 0;
+      }
+/* 選択中　*/
+#color-palette table tbody th.active {
+          /* color: #fff; */
+          background-color: #cfd8dc;
+        }
+#color-palette table tbody td {
+        
+        position: relative;
+        width: 6.5%;
+        border-radius: 0;
+        border-right: solid 1px rgba(255, 255, 255, .3);
+        border-bottom: solid 1px rgba(255, 255, 255, .3);
+      }
+/* 同じ色相 */
+#color-palette table tbody td.same-hue {
+          border-top: solid 2px rgba(255, 255, 255, .7);
+          border-bottom: solid 2px rgba(255, 255, 255, .7);
+        }
+/* 同じ階調 */
+#color-palette table tbody td.same-tone {
+          border-left: solid 2px rgba(255, 255, 255, .7);
+          border-right: solid 2px rgba(255, 255, 255, .7);
+        }
+/* 選択中　*/
+#color-palette table tbody td.active {
+          border: solid 5px rgba(255, 255, 255, .9);
+          -webkit-transition: border-width 0.2s ease-out;
+          transition: border-width 0.2s ease-out;
+        }
+#color-palette table tbody td.active a {
+            cursor: default;
+          }
+/* ボタン */
+#color-palette table tbody td a {
+          position: absolute;
+          top: 0;
+          left: 0;
+          display: block;
+          width: 100%;
+          height: 100%;
+          cursor: pointer;
+        }
+
+
+/* 選択した色の情報 */
+#color-info {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+}
+#color-info h3 {
+    color: rgba(0, 0, 0, .87);
+    text-transform: capitalize;
+  }
+/* 背景色 */
+#color-info .color-info__background {
+    -webkit-transition: background-color 0.2s ease-out;
+    transition: background-color 0.2s ease-out;
+  }
+/* 色のコードをコピーするボタン */
+#color-info .copy-code {
+    height: auto; /* 上書き */
+    text-transform: none;
+    padding-left: 0;
+    padding-right: 0;
+  }
+#color-info form {
+    padding-top: 10px;
+    margin-bottom: 10px;
+    background-color: rgba(255, 255, 255, .8);
+    border-radius: 2px;
+  }
+#color-info .code {
+    line-height: 1.4;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    margin-right: 30px; /* ボタンの分を空ける */
+  }
+/* 背景色が暗いとき */
+#color-info.darken h3 {
+      color: rgba(255, 255, 255, .87);
+    }
+
+
+    </style>
+
+  
+  
+  
+  
+
+</head>
+
+<body translate="no" >
+
+  
+<div class="section" id="app">
+  <div class="row">
+    <h1>Material warna html </h1>
+    <div class="col s12 l7" id="color-palette">
+      <div class="row">
+        <table>
+          <thead class="hide-on-small-only">
+            <tr>
+              <th>&nbsp;</th>
+              <th class="center" :class="{ active: '50' == color.value }">50</th>
+              <th class="center" :class="{ active: '100' == color.value }">100</th>
+              <th class="center" :class="{ active: '200' == color.value }">200</th>
+              <th class="center" :class="{ active: '300' == color.value }">300</th>
+              <th class="center" :class="{ active: '400' == color.value }">400</th>
+              <th class="center" :class="{ active: '500' == color.value }">500</th>
+              <th class="center" :class="{ active: '600' == color.value }">600</th>
+              <th class="center" :class="{ active: '700' == color.value }">700</th>
+              <th class="center" :class="{ active: '800' == color.value }">800</th>
+              <th class="center" :class="{ active: '900' == color.value }">900</th>
+              <th class="center" :class="{ active: 'A100' == color.value }">A<br>100</th>
+              <th class="center" :class="{ active: 'A200' == color.value }">A<br>200</th>
+              <th class="center" :class="{ active: 'A400' == color.value }">A<br>400</th>
+              <th class="center" :class="{ active: 'A700' == color.value }">A<br>700</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th :class="{ active: 'red' == color.hue }">red</th>
+              <td class="red lighten-5" :class="{
+                      active: hex == 'ffebee',
+                      'same-hue': color.hue == 'red',
+                      'same-tone': color.value == '50'}" data-hex="ffebee"><a @click.prevent="changeColor('#ffebee', 'red', '50', 'red,lighten-5', $event)" @mousedown.prevent="changeColor('#ffebee', 'red', '50', 'red,lighten-5', $event)"></a>
+              </td>
+              <td class="red lighten-4" :class="{
+                      active: hex == 'ffcdd2',
+                      'same-hue': color.hue == 'red',
+                      'same-tone': color.value == '100'}" data-hex="ffcdd2"><a @click.prevent="changeColor('#ffcdd2', 'red', '100', 'red,lighten-4', $event)" @mousedown.prevent="changeColor('#ffcdd2', 'red', '100', 'red,lighten-4', $event)"></a>
+              </td>
+              <td class="red lighten-3" :class="{
+                      active: hex == 'ef9a9a',
+                      'same-hue': color.hue == 'red',
+                      'same-tone': color.value == '200'}" data-hex="ef9a9a"><a @click.prevent="changeColor('#ef9a9a', 'red', '200', 'red,lighten-3', $event)" @mousedown.prevent="changeColor('#ef9a9a', 'red', '200', 'red,lighten-3', $event)"></a>
+              </td>
+              <td class="red lighten-2" :class="{
+                      active: hex == 'e57373',
+                      'same-hue': color.hue == 'red',
+                      'same-tone': color.value == '300'}" data-hex="e57373"><a @click.prevent="changeColor('#e57373', 'red', '300', 'red,lighten-2', $event)" @mousedown.prevent="changeColor('#e57373', 'red', '300', 'red,lighten-2', $event)"></a>
+              </td>
+              <td class="red lighten-1" :class="{
+                      active: hex == 'ef5350',
+                      'same-hue': color.hue == 'red',
+                      'same-tone': color.value == '400'}" data-hex="ef5350"><a @click.prevent="changeColor('#ef5350', 'red', '400', 'red,lighten-1', $event)" @mousedown.prevent="changeColor('#ef5350', 'red', '400', 'red,lighten-1', $event)"></a>
+              </td>
+              <td class="red undefined" :class="{
+                      active: hex == 'f44336',
+                      'same-hue': color.hue == 'red',
+                      'same-tone': color.value == '500'}" data-hex="f44336"><a @click.prevent="changeColor('#f44336', 'red', '500', 'red', $event)" @mousedown.prevent="changeColor('#f44336', 'red', '500', 'red', $event)"></a>
+              </td>
+              <td class="red darken-1" :class="{
+                      active: hex == 'e53935',
+                      'same-hue': color.hue == 'red',
+                      'same-tone': color.value == '600'}" data-hex="e53935"><a @click.prevent="changeColor('#e53935', 'red', '600', 'red,darken-1', $event)" @mousedown.prevent="changeColor('#e53935', 'red', '600', 'red,darken-1', $event)"></a>
+              </td>
+              <td class="red darken-2" :class="{
+                      active: hex == 'd32f2f',
+                      'same-hue': color.hue == 'red',
+                      'same-tone': color.value == '700'}" data-hex="d32f2f"><a @click.prevent="changeColor('#d32f2f', 'red', '700', 'red,darken-2', $event)" @mousedown.prevent="changeColor('#d32f2f', 'red', '700', 'red,darken-2', $event)"></a>
+              </td>
+              <td class="red darken-3" :class="{
+                      active: hex == 'c62828',
+                      'same-hue': color.hue == 'red',
+                      'same-tone': color.value == '800'}" data-hex="c62828"><a @click.prevent="changeColor('#c62828', 'red', '800', 'red,darken-3', $event)" @mousedown.prevent="changeColor('#c62828', 'red', '800', 'red,darken-3', $event)"></a>
+              </td>
+              <td class="red darken-4" :class="{
+                      active: hex == 'b71c1c',
+                      'same-hue': color.hue == 'red',
+                      'same-tone': color.value == '900'}" data-hex="b71c1c"><a @click.prevent="changeColor('#b71c1c', 'red', '900', 'red,darken-4', $event)" @mousedown.prevent="changeColor('#b71c1c', 'red', '900', 'red,darken-4', $event)"></a>
+              </td>
+              <td class="red accent-1" :class="{
+                      active: hex == 'ff8a80',
+                      'same-hue': color.hue == 'red',
+                      'same-tone': color.value == 'A100'}" data-hex="ff8a80"><a @click.prevent="changeColor('#ff8a80', 'red', 'A100', 'red,accent-1', $event)" @mousedown.prevent="changeColor('#ff8a80', 'red', 'A100', 'red,accent-1', $event)"></a>
+              </td>
+              <td class="red accent-2" :class="{
+                      active: hex == 'ff5252',
+                      'same-hue': color.hue == 'red',
+                      'same-tone': color.value == 'A200'}" data-hex="ff5252"><a @click.prevent="changeColor('#ff5252', 'red', 'A200', 'red,accent-2', $event)" @mousedown.prevent="changeColor('#ff5252', 'red', 'A200', 'red,accent-2', $event)"></a>
+              </td>
+              <td class="red accent-3" :class="{
+                      active: hex == 'ff1744',
+                      'same-hue': color.hue == 'red',
+                      'same-tone': color.value == 'A400'}" data-hex="ff1744"><a @click.prevent="changeColor('#ff1744', 'red', 'A400', 'red,accent-3', $event)" @mousedown.prevent="changeColor('#ff1744', 'red', 'A400', 'red,accent-3', $event)"></a>
+              </td>
+              <td class="red accent-4" :class="{
+                      active: hex == 'd50000',
+                      'same-hue': color.hue == 'red',
+                      'same-tone': color.value == 'A700'}" data-hex="d50000"><a @click.prevent="changeColor('#d50000', 'red', 'A700', 'red,accent-4', $event)" @mousedown.prevent="changeColor('#d50000', 'red', 'A700', 'red,accent-4', $event)"></a>
+              </td>
+            </tr>
+            <tr>
+              <th :class="{ active: 'pink' == color.hue }">pink</th>
+              <td class="pink lighten-5" :class="{
+                      active: hex == 'fce4ec',
+                      'same-hue': color.hue == 'pink',
+                      'same-tone': color.value == '50'}" data-hex="fce4ec"><a @click.prevent="changeColor('#fce4ec', 'pink', '50', 'pink,lighten-5', $event)" @mousedown.prevent="changeColor('#fce4ec', 'pink', '50', 'pink,lighten-5', $event)"></a>
+              </td>
+              <td class="pink lighten-4" :class="{
+                      active: hex == 'f8bbd0',
+                      'same-hue': color.hue == 'pink',
+                      'same-tone': color.value == '100'}" data-hex="f8bbd0"><a @click.prevent="changeColor('#f8bbd0', 'pink', '100', 'pink,lighten-4', $event)" @mousedown.prevent="changeColor('#f8bbd0', 'pink', '100', 'pink,lighten-4', $event)"></a>
+              </td>
+              <td class="pink lighten-3" :class="{
+                      active: hex == 'f48fb1',
+                      'same-hue': color.hue == 'pink',
+                      'same-tone': color.value == '200'}" data-hex="f48fb1"><a @click.prevent="changeColor('#f48fb1', 'pink', '200', 'pink,lighten-3', $event)" @mousedown.prevent="changeColor('#f48fb1', 'pink', '200', 'pink,lighten-3', $event)"></a>
+              </td>
+              <td class="pink lighten-2" :class="{
+                      active: hex == 'f06292',
+                      'same-hue': color.hue == 'pink',
+                      'same-tone': color.value == '300'}" data-hex="f06292"><a @click.prevent="changeColor('#f06292', 'pink', '300', 'pink,lighten-2', $event)" @mousedown.prevent="changeColor('#f06292', 'pink', '300', 'pink,lighten-2', $event)"></a>
+              </td>
+              <td class="pink lighten-1" :class="{
+                      active: hex == 'ec407a',
+                      'same-hue': color.hue == 'pink',
+                      'same-tone': color.value == '400'}" data-hex="ec407a"><a @click.prevent="changeColor('#ec407a', 'pink', '400', 'pink,lighten-1', $event)" @mousedown.prevent="changeColor('#ec407a', 'pink', '400', 'pink,lighten-1', $event)"></a>
+              </td>
+              <td class="pink undefined" :class="{
+                      active: hex == 'e91e63',
+                      'same-hue': color.hue == 'pink',
+                      'same-tone': color.value == '500'}" data-hex="e91e63"><a @click.prevent="changeColor('#e91e63', 'pink', '500', 'pink', $event)" @mousedown.prevent="changeColor('#e91e63', 'pink', '500', 'pink', $event)"></a>
+              </td>
+              <td class="pink darken-1" :class="{
+                      active: hex == 'd81b60',
+                      'same-hue': color.hue == 'pink',
+                      'same-tone': color.value == '600'}" data-hex="d81b60"><a @click.prevent="changeColor('#d81b60', 'pink', '600', 'pink,darken-1', $event)" @mousedown.prevent="changeColor('#d81b60', 'pink', '600', 'pink,darken-1', $event)"></a>
+              </td>
+              <td class="pink darken-2" :class="{
+                      active: hex == 'c2185b',
+                      'same-hue': color.hue == 'pink',
+                      'same-tone': color.value == '700'}" data-hex="c2185b"><a @click.prevent="changeColor('#c2185b', 'pink', '700', 'pink,darken-2', $event)" @mousedown.prevent="changeColor('#c2185b', 'pink', '700', 'pink,darken-2', $event)"></a>
+              </td>
+              <td class="pink darken-3" :class="{
+                      active: hex == 'ad1457',
+                      'same-hue': color.hue == 'pink',
+                      'same-tone': color.value == '800'}" data-hex="ad1457"><a @click.prevent="changeColor('#ad1457', 'pink', '800', 'pink,darken-3', $event)" @mousedown.prevent="changeColor('#ad1457', 'pink', '800', 'pink,darken-3', $event)"></a>
+              </td>
+              <td class="pink darken-4" :class="{
+                      active: hex == '880e4f',
+                      'same-hue': color.hue == 'pink',
+                      'same-tone': color.value == '900'}" data-hex="880e4f"><a @click.prevent="changeColor('#880e4f', 'pink', '900', 'pink,darken-4', $event)" @mousedown.prevent="changeColor('#880e4f', 'pink', '900', 'pink,darken-4', $event)"></a>
+              </td>
+              <td class="pink accent-1" :class="{
+                      active: hex == 'ff80ab',
+                      'same-hue': color.hue == 'pink',
+                      'same-tone': color.value == 'A100'}" data-hex="ff80ab"><a @click.prevent="changeColor('#ff80ab', 'pink', 'A100', 'pink,accent-1', $event)" @mousedown.prevent="changeColor('#ff80ab', 'pink', 'A100', 'pink,accent-1', $event)"></a>
+              </td>
+              <td class="pink accent-2" :class="{
+                      active: hex == 'ff4081',
+                      'same-hue': color.hue == 'pink',
+                      'same-tone': color.value == 'A200'}" data-hex="ff4081"><a @click.prevent="changeColor('#ff4081', 'pink', 'A200', 'pink,accent-2', $event)" @mousedown.prevent="changeColor('#ff4081', 'pink', 'A200', 'pink,accent-2', $event)"></a>
+              </td>
+              <td class="pink accent-3" :class="{
+                      active: hex == 'f50057',
+                      'same-hue': color.hue == 'pink',
+                      'same-tone': color.value == 'A400'}" data-hex="f50057"><a @click.prevent="changeColor('#f50057', 'pink', 'A400', 'pink,accent-3', $event)" @mousedown.prevent="changeColor('#f50057', 'pink', 'A400', 'pink,accent-3', $event)"></a>
+              </td>
+              <td class="pink accent-4" :class="{
+                      active: hex == 'c51162',
+                      'same-hue': color.hue == 'pink',
+                      'same-tone': color.value == 'A700'}" data-hex="c51162"><a @click.prevent="changeColor('#c51162', 'pink', 'A700', 'pink,accent-4', $event)" @mousedown.prevent="changeColor('#c51162', 'pink', 'A700', 'pink,accent-4', $event)"></a>
+              </td>
+            </tr>
+            <tr>
+              <th :class="{ active: 'purple' == color.hue }">purple</th>
+              <td class="purple lighten-5" :class="{
+                      active: hex == 'f3e5f5',
+                      'same-hue': color.hue == 'purple',
+                      'same-tone': color.value == '50'}" data-hex="f3e5f5"><a @click.prevent="changeColor('#f3e5f5', 'purple', '50', 'purple,lighten-5', $event)" @mousedown.prevent="changeColor('#f3e5f5', 'purple', '50', 'purple,lighten-5', $event)"></a>
+              </td>
+              <td class="purple lighten-4" :class="{
+                      active: hex == 'e1bee7',
+                      'same-hue': color.hue == 'purple',
+                      'same-tone': color.value == '100'}" data-hex="e1bee7"><a @click.prevent="changeColor('#e1bee7', 'purple', '100', 'purple,lighten-4', $event)" @mousedown.prevent="changeColor('#e1bee7', 'purple', '100', 'purple,lighten-4', $event)"></a>
+              </td>
+              <td class="purple lighten-3" :class="{
+                      active: hex == 'ce93d8',
+                      'same-hue': color.hue == 'purple',
+                      'same-tone': color.value == '200'}" data-hex="ce93d8"><a @click.prevent="changeColor('#ce93d8', 'purple', '200', 'purple,lighten-3', $event)" @mousedown.prevent="changeColor('#ce93d8', 'purple', '200', 'purple,lighten-3', $event)"></a>
+              </td>
+              <td class="purple lighten-2" :class="{
+                      active: hex == 'ba68c8',
+                      'same-hue': color.hue == 'purple',
+                      'same-tone': color.value == '300'}" data-hex="ba68c8"><a @click.prevent="changeColor('#ba68c8', 'purple', '300', 'purple,lighten-2', $event)" @mousedown.prevent="changeColor('#ba68c8', 'purple', '300', 'purple,lighten-2', $event)"></a>
+              </td>
+              <td class="purple lighten-1" :class="{
+                      active: hex == 'ab47bc',
+                      'same-hue': color.hue == 'purple',
+                      'same-tone': color.value == '400'}" data-hex="ab47bc"><a @click.prevent="changeColor('#ab47bc', 'purple', '400', 'purple,lighten-1', $event)" @mousedown.prevent="changeColor('#ab47bc', 'purple', '400', 'purple,lighten-1', $event)"></a>
+              </td>
+              <td class="purple undefined" :class="{
+                      active: hex == '9c27b0',
+                      'same-hue': color.hue == 'purple',
+                      'same-tone': color.value == '500'}" data-hex="9c27b0"><a @click.prevent="changeColor('#9c27b0', 'purple', '500', 'purple', $event)" @mousedown.prevent="changeColor('#9c27b0', 'purple', '500', 'purple', $event)"></a>
+              </td>
+              <td class="purple darken-1" :class="{
+                      active: hex == '8e24aa',
+                      'same-hue': color.hue == 'purple',
+                      'same-tone': color.value == '600'}" data-hex="8e24aa"><a @click.prevent="changeColor('#8e24aa', 'purple', '600', 'purple,darken-1', $event)" @mousedown.prevent="changeColor('#8e24aa', 'purple', '600', 'purple,darken-1', $event)"></a>
+              </td>
+              <td class="purple darken-2" :class="{
+                      active: hex == '7b1fa2',
+                      'same-hue': color.hue == 'purple',
+                      'same-tone': color.value == '700'}" data-hex="7b1fa2"><a @click.prevent="changeColor('#7b1fa2', 'purple', '700', 'purple,darken-2', $event)" @mousedown.prevent="changeColor('#7b1fa2', 'purple', '700', 'purple,darken-2', $event)"></a>
+              </td>
+              <td class="purple darken-3" :class="{
+                      active: hex == '6a1b9a',
+                      'same-hue': color.hue == 'purple',
+                      'same-tone': color.value == '800'}" data-hex="6a1b9a"><a @click.prevent="changeColor('#6a1b9a', 'purple', '800', 'purple,darken-3', $event)" @mousedown.prevent="changeColor('#6a1b9a', 'purple', '800', 'purple,darken-3', $event)"></a>
+              </td>
+              <td class="purple darken-4" :class="{
+                      active: hex == '4a148c',
+                      'same-hue': color.hue == 'purple',
+                      'same-tone': color.value == '900'}" data-hex="4a148c"><a @click.prevent="changeColor('#4a148c', 'purple', '900', 'purple,darken-4', $event)" @mousedown.prevent="changeColor('#4a148c', 'purple', '900', 'purple,darken-4', $event)"></a>
+              </td>
+              <td class="purple accent-1" :class="{
+                      active: hex == 'ea80fc',
+                      'same-hue': color.hue == 'purple',
+                      'same-tone': color.value == 'A100'}" data-hex="ea80fc"><a @click.prevent="changeColor('#ea80fc', 'purple', 'A100', 'purple,accent-1', $event)" @mousedown.prevent="changeColor('#ea80fc', 'purple', 'A100', 'purple,accent-1', $event)"></a>
+              </td>
+              <td class="purple accent-2" :class="{
+                      active: hex == 'e040fb',
+                      'same-hue': color.hue == 'purple',
+                      'same-tone': color.value == 'A200'}" data-hex="e040fb"><a @click.prevent="changeColor('#e040fb', 'purple', 'A200', 'purple,accent-2', $event)" @mousedown.prevent="changeColor('#e040fb', 'purple', 'A200', 'purple,accent-2', $event)"></a>
+              </td>
+              <td class="purple accent-3" :class="{
+                      active: hex == 'd500f9',
+                      'same-hue': color.hue == 'purple',
+                      'same-tone': color.value == 'A400'}" data-hex="d500f9"><a @click.prevent="changeColor('#d500f9', 'purple', 'A400', 'purple,accent-3', $event)" @mousedown.prevent="changeColor('#d500f9', 'purple', 'A400', 'purple,accent-3', $event)"></a>
+              </td>
+              <td class="purple accent-4" :class="{
+                      active: hex == 'aa00ff',
+                      'same-hue': color.hue == 'purple',
+                      'same-tone': color.value == 'A700'}" data-hex="aa00ff"><a @click.prevent="changeColor('#aa00ff', 'purple', 'A700', 'purple,accent-4', $event)" @mousedown.prevent="changeColor('#aa00ff', 'purple', 'A700', 'purple,accent-4', $event)"></a>
+              </td>
+            </tr>
+            <tr>
+              <th :class="{ active: 'deep purple' == color.hue }">deep purple</th>
+              <td class="deep-purple lighten-5" :class="{
+                      active: hex == 'ede7f6',
+                      'same-hue': color.hue == 'deep purple',
+                      'same-tone': color.value == '50'}" data-hex="ede7f6"><a @click.prevent="changeColor('#ede7f6', 'deep purple', '50', 'deep-purple,lighten-5', $event)" @mousedown.prevent="changeColor('#ede7f6', 'deep purple', '50', 'deep-purple,lighten-5', $event)"></a>
+              </td>
+              <td class="deep-purple lighten-4" :class="{
+                      active: hex == 'd1c4e9',
+                      'same-hue': color.hue == 'deep purple',
+                      'same-tone': color.value == '100'}" data-hex="d1c4e9"><a @click.prevent="changeColor('#d1c4e9', 'deep purple', '100', 'deep-purple,lighten-4', $event)" @mousedown.prevent="changeColor('#d1c4e9', 'deep purple', '100', 'deep-purple,lighten-4', $event)"></a>
+              </td>
+              <td class="deep-purple lighten-3" :class="{
+                      active: hex == 'b39ddb',
+                      'same-hue': color.hue == 'deep purple',
+                      'same-tone': color.value == '200'}" data-hex="b39ddb"><a @click.prevent="changeColor('#b39ddb', 'deep purple', '200', 'deep-purple,lighten-3', $event)" @mousedown.prevent="changeColor('#b39ddb', 'deep purple', '200', 'deep-purple,lighten-3', $event)"></a>
+              </td>
+              <td class="deep-purple lighten-2" :class="{
+                      active: hex == '9575cd',
+                      'same-hue': color.hue == 'deep purple',
+                      'same-tone': color.value == '300'}" data-hex="9575cd"><a @click.prevent="changeColor('#9575cd', 'deep purple', '300', 'deep-purple,lighten-2', $event)" @mousedown.prevent="changeColor('#9575cd', 'deep purple', '300', 'deep-purple,lighten-2', $event)"></a>
+              </td>
+              <td class="deep-purple lighten-1" :class="{
+                      active: hex == '7e57c2',
+                      'same-hue': color.hue == 'deep purple',
+                      'same-tone': color.value == '400'}" data-hex="7e57c2"><a @click.prevent="changeColor('#7e57c2', 'deep purple', '400', 'deep-purple,lighten-1', $event)" @mousedown.prevent="changeColor('#7e57c2', 'deep purple', '400', 'deep-purple,lighten-1', $event)"></a>
+              </td>
+              <td class="deep-purple undefined" :class="{
+                      active: hex == '673ab7',
+                      'same-hue': color.hue == 'deep purple',
+                      'same-tone': color.value == '500'}" data-hex="673ab7"><a @click.prevent="changeColor('#673ab7', 'deep purple', '500', 'deep-purple', $event)" @mousedown.prevent="changeColor('#673ab7', 'deep purple', '500', 'deep-purple', $event)"></a>
+              </td>
+              <td class="deep-purple darken-1" :class="{
+                      active: hex == '5e35b1',
+                      'same-hue': color.hue == 'deep purple',
+                      'same-tone': color.value == '600'}" data-hex="5e35b1"><a @click.prevent="changeColor('#5e35b1', 'deep purple', '600', 'deep-purple,darken-1', $event)" @mousedown.prevent="changeColor('#5e35b1', 'deep purple', '600', 'deep-purple,darken-1', $event)"></a>
+              </td>
+              <td class="deep-purple darken-2" :class="{
+                      active: hex == '512da8',
+                      'same-hue': color.hue == 'deep purple',
+                      'same-tone': color.value == '700'}" data-hex="512da8"><a @click.prevent="changeColor('#512da8', 'deep purple', '700', 'deep-purple,darken-2', $event)" @mousedown.prevent="changeColor('#512da8', 'deep purple', '700', 'deep-purple,darken-2', $event)"></a>
+              </td>
+              <td class="deep-purple darken-3" :class="{
+                      active: hex == '4527a0',
+                      'same-hue': color.hue == 'deep purple',
+                      'same-tone': color.value == '800'}" data-hex="4527a0"><a @click.prevent="changeColor('#4527a0', 'deep purple', '800', 'deep-purple,darken-3', $event)" @mousedown.prevent="changeColor('#4527a0', 'deep purple', '800', 'deep-purple,darken-3', $event)"></a>
+              </td>
+              <td class="deep-purple darken-4" :class="{
+                      active: hex == '311b92',
+                      'same-hue': color.hue == 'deep purple',
+                      'same-tone': color.value == '900'}" data-hex="311b92"><a @click.prevent="changeColor('#311b92', 'deep purple', '900', 'deep-purple,darken-4', $event)" @mousedown.prevent="changeColor('#311b92', 'deep purple', '900', 'deep-purple,darken-4', $event)"></a>
+              </td>
+              <td class="deep-purple accent-1" :class="{
+                      active: hex == 'b388ff',
+                      'same-hue': color.hue == 'deep purple',
+                      'same-tone': color.value == 'A100'}" data-hex="b388ff"><a @click.prevent="changeColor('#b388ff', 'deep purple', 'A100', 'deep-purple,accent-1', $event)" @mousedown.prevent="changeColor('#b388ff', 'deep purple', 'A100', 'deep-purple,accent-1', $event)"></a>
+              </td>
+              <td class="deep-purple accent-2" :class="{
+                      active: hex == '7c4dff',
+                      'same-hue': color.hue == 'deep purple',
+                      'same-tone': color.value == 'A200'}" data-hex="7c4dff"><a @click.prevent="changeColor('#7c4dff', 'deep purple', 'A200', 'deep-purple,accent-2', $event)" @mousedown.prevent="changeColor('#7c4dff', 'deep purple', 'A200', 'deep-purple,accent-2', $event)"></a>
+              </td>
+              <td class="deep-purple accent-3" :class="{
+                      active: hex == '651fff',
+                      'same-hue': color.hue == 'deep purple',
+                      'same-tone': color.value == 'A400'}" data-hex="651fff"><a @click.prevent="changeColor('#651fff', 'deep purple', 'A400', 'deep-purple,accent-3', $event)" @mousedown.prevent="changeColor('#651fff', 'deep purple', 'A400', 'deep-purple,accent-3', $event)"></a>
+              </td>
+              <td class="deep-purple accent-4" :class="{
+                      active: hex == '6200ea',
+                      'same-hue': color.hue == 'deep purple',
+                      'same-tone': color.value == 'A700'}" data-hex="6200ea"><a @click.prevent="changeColor('#6200ea', 'deep purple', 'A700', 'deep-purple,accent-4', $event)" @mousedown.prevent="changeColor('#6200ea', 'deep purple', 'A700', 'deep-purple,accent-4', $event)"></a>
+              </td>
+            </tr>
+            <tr>
+              <th :class="{ active: 'indigo' == color.hue }">indigo</th>
+              <td class="indigo lighten-5" :class="{
+                      active: hex == 'e8eaf6',
+                      'same-hue': color.hue == 'indigo',
+                      'same-tone': color.value == '50'}" data-hex="e8eaf6"><a @click.prevent="changeColor('#e8eaf6', 'indigo', '50', 'indigo,lighten-5', $event)" @mousedown.prevent="changeColor('#e8eaf6', 'indigo', '50', 'indigo,lighten-5', $event)"></a>
+              </td>
+              <td class="indigo lighten-4" :class="{
+                      active: hex == 'c5cae9',
+                      'same-hue': color.hue == 'indigo',
+                      'same-tone': color.value == '100'}" data-hex="c5cae9"><a @click.prevent="changeColor('#c5cae9', 'indigo', '100', 'indigo,lighten-4', $event)" @mousedown.prevent="changeColor('#c5cae9', 'indigo', '100', 'indigo,lighten-4', $event)"></a>
+              </td>
+              <td class="indigo lighten-3" :class="{
+                      active: hex == '9fa8da',
+                      'same-hue': color.hue == 'indigo',
+                      'same-tone': color.value == '200'}" data-hex="9fa8da"><a @click.prevent="changeColor('#9fa8da', 'indigo', '200', 'indigo,lighten-3', $event)" @mousedown.prevent="changeColor('#9fa8da', 'indigo', '200', 'indigo,lighten-3', $event)"></a>
+              </td>
+              <td class="indigo lighten-2" :class="{
+                      active: hex == '7986cb',
+                      'same-hue': color.hue == 'indigo',
+                      'same-tone': color.value == '300'}" data-hex="7986cb"><a @click.prevent="changeColor('#7986cb', 'indigo', '300', 'indigo,lighten-2', $event)" @mousedown.prevent="changeColor('#7986cb', 'indigo', '300', 'indigo,lighten-2', $event)"></a>
+              </td>
+              <td class="indigo lighten-1" :class="{
+                      active: hex == '5c6bc0',
+                      'same-hue': color.hue == 'indigo',
+                      'same-tone': color.value == '400'}" data-hex="5c6bc0"><a @click.prevent="changeColor('#5c6bc0', 'indigo', '400', 'indigo,lighten-1', $event)" @mousedown.prevent="changeColor('#5c6bc0', 'indigo', '400', 'indigo,lighten-1', $event)"></a>
+              </td>
+              <td class="indigo undefined" :class="{
+                      active: hex == '3f51b5',
+                      'same-hue': color.hue == 'indigo',
+                      'same-tone': color.value == '500'}" data-hex="3f51b5"><a @click.prevent="changeColor('#3f51b5', 'indigo', '500', 'indigo', $event)" @mousedown.prevent="changeColor('#3f51b5', 'indigo', '500', 'indigo', $event)"></a>
+              </td>
+              <td class="indigo darken-1" :class="{
+                      active: hex == '3949ab',
+                      'same-hue': color.hue == 'indigo',
+                      'same-tone': color.value == '600'}" data-hex="3949ab"><a @click.prevent="changeColor('#3949ab', 'indigo', '600', 'indigo,darken-1', $event)" @mousedown.prevent="changeColor('#3949ab', 'indigo', '600', 'indigo,darken-1', $event)"></a>
+              </td>
+              <td class="indigo darken-2" :class="{
+                      active: hex == '303f9f',
+                      'same-hue': color.hue == 'indigo',
+                      'same-tone': color.value == '700'}" data-hex="303f9f"><a @click.prevent="changeColor('#303f9f', 'indigo', '700', 'indigo,darken-2', $event)" @mousedown.prevent="changeColor('#303f9f', 'indigo', '700', 'indigo,darken-2', $event)"></a>
+              </td>
+              <td class="indigo darken-3" :class="{
+                      active: hex == '283593',
+                      'same-hue': color.hue == 'indigo',
+                      'same-tone': color.value == '800'}" data-hex="283593"><a @click.prevent="changeColor('#283593', 'indigo', '800', 'indigo,darken-3', $event)" @mousedown.prevent="changeColor('#283593', 'indigo', '800', 'indigo,darken-3', $event)"></a>
+              </td>
+              <td class="indigo darken-4" :class="{
+                      active: hex == '1a237e',
+                      'same-hue': color.hue == 'indigo',
+                      'same-tone': color.value == '900'}" data-hex="1a237e"><a @click.prevent="changeColor('#1a237e', 'indigo', '900', 'indigo,darken-4', $event)" @mousedown.prevent="changeColor('#1a237e', 'indigo', '900', 'indigo,darken-4', $event)"></a>
+              </td>
+              <td class="indigo accent-1" :class="{
+                      active: hex == '8c9eff',
+                      'same-hue': color.hue == 'indigo',
+                      'same-tone': color.value == 'A100'}" data-hex="8c9eff"><a @click.prevent="changeColor('#8c9eff', 'indigo', 'A100', 'indigo,accent-1', $event)" @mousedown.prevent="changeColor('#8c9eff', 'indigo', 'A100', 'indigo,accent-1', $event)"></a>
+              </td>
+              <td class="indigo accent-2" :class="{
+                      active: hex == '536dfe',
+                      'same-hue': color.hue == 'indigo',
+                      'same-tone': color.value == 'A200'}" data-hex="536dfe"><a @click.prevent="changeColor('#536dfe', 'indigo', 'A200', 'indigo,accent-2', $event)" @mousedown.prevent="changeColor('#536dfe', 'indigo', 'A200', 'indigo,accent-2', $event)"></a>
+              </td>
+              <td class="indigo accent-3" :class="{
+                      active: hex == '3d5afe',
+                      'same-hue': color.hue == 'indigo',
+                      'same-tone': color.value == 'A400'}" data-hex="3d5afe"><a @click.prevent="changeColor('#3d5afe', 'indigo', 'A400', 'indigo,accent-3', $event)" @mousedown.prevent="changeColor('#3d5afe', 'indigo', 'A400', 'indigo,accent-3', $event)"></a>
+              </td>
+              <td class="indigo accent-4" :class="{
+                      active: hex == '304ffe',
+                      'same-hue': color.hue == 'indigo',
+                      'same-tone': color.value == 'A700'}" data-hex="304ffe"><a @click.prevent="changeColor('#304ffe', 'indigo', 'A700', 'indigo,accent-4', $event)" @mousedown.prevent="changeColor('#304ffe', 'indigo', 'A700', 'indigo,accent-4', $event)"></a>
+              </td>
+            </tr>
+            <tr>
+              <th :class="{ active: 'blue' == color.hue }">blue</th>
+              <td class="blue lighten-5" :class="{
+                      active: hex == 'e3f2fd',
+                      'same-hue': color.hue == 'blue',
+                      'same-tone': color.value == '50'}" data-hex="e3f2fd"><a @click.prevent="changeColor('#e3f2fd', 'blue', '50', 'blue,lighten-5', $event)" @mousedown.prevent="changeColor('#e3f2fd', 'blue', '50', 'blue,lighten-5', $event)"></a>
+              </td>
+              <td class="blue lighten-4" :class="{
+                      active: hex == 'bbdefb',
+                      'same-hue': color.hue == 'blue',
+                      'same-tone': color.value == '100'}" data-hex="bbdefb"><a @click.prevent="changeColor('#bbdefb', 'blue', '100', 'blue,lighten-4', $event)" @mousedown.prevent="changeColor('#bbdefb', 'blue', '100', 'blue,lighten-4', $event)"></a>
+              </td>
+              <td class="blue lighten-3" :class="{
+                      active: hex == '90caf9',
+                      'same-hue': color.hue == 'blue',
+                      'same-tone': color.value == '200'}" data-hex="90caf9"><a @click.prevent="changeColor('#90caf9', 'blue', '200', 'blue,lighten-3', $event)" @mousedown.prevent="changeColor('#90caf9', 'blue', '200', 'blue,lighten-3', $event)"></a>
+              </td>
+              <td class="blue lighten-2" :class="{
+                      active: hex == '64b5f6',
+                      'same-hue': color.hue == 'blue',
+                      'same-tone': color.value == '300'}" data-hex="64b5f6"><a @click.prevent="changeColor('#64b5f6', 'blue', '300', 'blue,lighten-2', $event)" @mousedown.prevent="changeColor('#64b5f6', 'blue', '300', 'blue,lighten-2', $event)"></a>
+              </td>
+              <td class="blue lighten-1" :class="{
+                      active: hex == '42a5f5',
+                      'same-hue': color.hue == 'blue',
+                      'same-tone': color.value == '400'}" data-hex="42a5f5"><a @click.prevent="changeColor('#42a5f5', 'blue', '400', 'blue,lighten-1', $event)" @mousedown.prevent="changeColor('#42a5f5', 'blue', '400', 'blue,lighten-1', $event)"></a>
+              </td>
+              <td class="blue undefined" :class="{
+                      active: hex == '2196f3',
+                      'same-hue': color.hue == 'blue',
+                      'same-tone': color.value == '500'}" data-hex="2196f3"><a @click.prevent="changeColor('#2196f3', 'blue', '500', 'blue', $event)" @mousedown.prevent="changeColor('#2196f3', 'blue', '500', 'blue', $event)"></a>
+              </td>
+              <td class="blue darken-1" :class="{
+                      active: hex == '1e88e5',
+                      'same-hue': color.hue == 'blue',
+                      'same-tone': color.value == '600'}" data-hex="1e88e5"><a @click.prevent="changeColor('#1e88e5', 'blue', '600', 'blue,darken-1', $event)" @mousedown.prevent="changeColor('#1e88e5', 'blue', '600', 'blue,darken-1', $event)"></a>
+              </td>
+              <td class="blue darken-2" :class="{
+                      active: hex == '1976d2',
+                      'same-hue': color.hue == 'blue',
+                      'same-tone': color.value == '700'}" data-hex="1976d2"><a @click.prevent="changeColor('#1976d2', 'blue', '700', 'blue,darken-2', $event)" @mousedown.prevent="changeColor('#1976d2', 'blue', '700', 'blue,darken-2', $event)"></a>
+              </td>
+              <td class="blue darken-3" :class="{
+                      active: hex == '1565c0',
+                      'same-hue': color.hue == 'blue',
+                      'same-tone': color.value == '800'}" data-hex="1565c0"><a @click.prevent="changeColor('#1565c0', 'blue', '800', 'blue,darken-3', $event)" @mousedown.prevent="changeColor('#1565c0', 'blue', '800', 'blue,darken-3', $event)"></a>
+              </td>
+              <td class="blue darken-4" :class="{
+                      active: hex == '0d47a1',
+                      'same-hue': color.hue == 'blue',
+                      'same-tone': color.value == '900'}" data-hex="0d47a1"><a @click.prevent="changeColor('#0d47a1', 'blue', '900', 'blue,darken-4', $event)" @mousedown.prevent="changeColor('#0d47a1', 'blue', '900', 'blue,darken-4', $event)"></a>
+              </td>
+              <td class="blue accent-1" :class="{
+                      active: hex == '82b1ff',
+                      'same-hue': color.hue == 'blue',
+                      'same-tone': color.value == 'A100'}" data-hex="82b1ff"><a @click.prevent="changeColor('#82b1ff', 'blue', 'A100', 'blue,accent-1', $event)" @mousedown.prevent="changeColor('#82b1ff', 'blue', 'A100', 'blue,accent-1', $event)"></a>
+              </td>
+              <td class="blue accent-2" :class="{
+                      active: hex == '448aff',
+                      'same-hue': color.hue == 'blue',
+                      'same-tone': color.value == 'A200'}" data-hex="448aff"><a @click.prevent="changeColor('#448aff', 'blue', 'A200', 'blue,accent-2', $event)" @mousedown.prevent="changeColor('#448aff', 'blue', 'A200', 'blue,accent-2', $event)"></a>
+              </td>
+              <td class="blue accent-3" :class="{
+                      active: hex == '2979ff',
+                      'same-hue': color.hue == 'blue',
+                      'same-tone': color.value == 'A400'}" data-hex="2979ff"><a @click.prevent="changeColor('#2979ff', 'blue', 'A400', 'blue,accent-3', $event)" @mousedown.prevent="changeColor('#2979ff', 'blue', 'A400', 'blue,accent-3', $event)"></a>
+              </td>
+              <td class="blue accent-4" :class="{
+                      active: hex == '2962ff',
+                      'same-hue': color.hue == 'blue',
+                      'same-tone': color.value == 'A700'}" data-hex="2962ff"><a @click.prevent="changeColor('#2962ff', 'blue', 'A700', 'blue,accent-4', $event)" @mousedown.prevent="changeColor('#2962ff', 'blue', 'A700', 'blue,accent-4', $event)"></a>
+              </td>
+            </tr>
+            <tr>
+              <th :class="{ active: 'light blue' == color.hue }">light blue</th>
+              <td class="light-blue lighten-5" :class="{
+                      active: hex == 'e1f5fe',
+                      'same-hue': color.hue == 'light blue',
+                      'same-tone': color.value == '50'}" data-hex="e1f5fe"><a @click.prevent="changeColor('#e1f5fe', 'light blue', '50', 'light-blue,lighten-5', $event)" @mousedown.prevent="changeColor('#e1f5fe', 'light blue', '50', 'light-blue,lighten-5', $event)"></a>
+              </td>
+              <td class="light-blue lighten-4" :class="{
+                      active: hex == 'b3e5fc',
+                      'same-hue': color.hue == 'light blue',
+                      'same-tone': color.value == '100'}" data-hex="b3e5fc"><a @click.prevent="changeColor('#b3e5fc', 'light blue', '100', 'light-blue,lighten-4', $event)" @mousedown.prevent="changeColor('#b3e5fc', 'light blue', '100', 'light-blue,lighten-4', $event)"></a>
+              </td>
+              <td class="light-blue lighten-3" :class="{
+                      active: hex == '81d4fa',
+                      'same-hue': color.hue == 'light blue',
+                      'same-tone': color.value == '200'}" data-hex="81d4fa"><a @click.prevent="changeColor('#81d4fa', 'light blue', '200', 'light-blue,lighten-3', $event)" @mousedown.prevent="changeColor('#81d4fa', 'light blue', '200', 'light-blue,lighten-3', $event)"></a>
+              </td>
+              <td class="light-blue lighten-2" :class="{
+                      active: hex == '4fc3f7',
+                      'same-hue': color.hue == 'light blue',
+                      'same-tone': color.value == '300'}" data-hex="4fc3f7"><a @click.prevent="changeColor('#4fc3f7', 'light blue', '300', 'light-blue,lighten-2', $event)" @mousedown.prevent="changeColor('#4fc3f7', 'light blue', '300', 'light-blue,lighten-2', $event)"></a>
+              </td>
+              <td class="light-blue lighten-1" :class="{
+                      active: hex == '29b6f6',
+                      'same-hue': color.hue == 'light blue',
+                      'same-tone': color.value == '400'}" data-hex="29b6f6"><a @click.prevent="changeColor('#29b6f6', 'light blue', '400', 'light-blue,lighten-1', $event)" @mousedown.prevent="changeColor('#29b6f6', 'light blue', '400', 'light-blue,lighten-1', $event)"></a>
+              </td>
+              <td class="light-blue undefined" :class="{
+                      active: hex == '03a9f4',
+                      'same-hue': color.hue == 'light blue',
+                      'same-tone': color.value == '500'}" data-hex="03a9f4"><a @click.prevent="changeColor('#03a9f4', 'light blue', '500', 'light-blue', $event)" @mousedown.prevent="changeColor('#03a9f4', 'light blue', '500', 'light-blue', $event)"></a>
+              </td>
+              <td class="light-blue darken-1" :class="{
+                      active: hex == '039be5',
+                      'same-hue': color.hue == 'light blue',
+                      'same-tone': color.value == '600'}" data-hex="039be5"><a @click.prevent="changeColor('#039be5', 'light blue', '600', 'light-blue,darken-1', $event)" @mousedown.prevent="changeColor('#039be5', 'light blue', '600', 'light-blue,darken-1', $event)"></a>
+              </td>
+              <td class="light-blue darken-2" :class="{
+                      active: hex == '0288d1',
+                      'same-hue': color.hue == 'light blue',
+                      'same-tone': color.value == '700'}" data-hex="0288d1"><a @click.prevent="changeColor('#0288d1', 'light blue', '700', 'light-blue,darken-2', $event)" @mousedown.prevent="changeColor('#0288d1', 'light blue', '700', 'light-blue,darken-2', $event)"></a>
+              </td>
+              <td class="light-blue darken-3" :class="{
+                      active: hex == '0277bd',
+                      'same-hue': color.hue == 'light blue',
+                      'same-tone': color.value == '800'}" data-hex="0277bd"><a @click.prevent="changeColor('#0277bd', 'light blue', '800', 'light-blue,darken-3', $event)" @mousedown.prevent="changeColor('#0277bd', 'light blue', '800', 'light-blue,darken-3', $event)"></a>
+              </td>
+              <td class="light-blue darken-4" :class="{
+                      active: hex == '01579b',
+                      'same-hue': color.hue == 'light blue',
+                      'same-tone': color.value == '900'}" data-hex="01579b"><a @click.prevent="changeColor('#01579b', 'light blue', '900', 'light-blue,darken-4', $event)" @mousedown.prevent="changeColor('#01579b', 'light blue', '900', 'light-blue,darken-4', $event)"></a>
+              </td>
+              <td class="light-blue accent-1" :class="{
+                      active: hex == '80d8ff',
+                      'same-hue': color.hue == 'light blue',
+                      'same-tone': color.value == 'A100'}" data-hex="80d8ff"><a @click.prevent="changeColor('#80d8ff', 'light blue', 'A100', 'light-blue,accent-1', $event)" @mousedown.prevent="changeColor('#80d8ff', 'light blue', 'A100', 'light-blue,accent-1', $event)"></a>
+              </td>
+              <td class="light-blue accent-2" :class="{
+                      active: hex == '40c4ff',
+                      'same-hue': color.hue == 'light blue',
+                      'same-tone': color.value == 'A200'}" data-hex="40c4ff"><a @click.prevent="changeColor('#40c4ff', 'light blue', 'A200', 'light-blue,accent-2', $event)" @mousedown.prevent="changeColor('#40c4ff', 'light blue', 'A200', 'light-blue,accent-2', $event)"></a>
+              </td>
+              <td class="light-blue accent-3" :class="{
+                      active: hex == '00b0ff',
+                      'same-hue': color.hue == 'light blue',
+                      'same-tone': color.value == 'A400'}" data-hex="00b0ff"><a @click.prevent="changeColor('#00b0ff', 'light blue', 'A400', 'light-blue,accent-3', $event)" @mousedown.prevent="changeColor('#00b0ff', 'light blue', 'A400', 'light-blue,accent-3', $event)"></a>
+              </td>
+              <td class="light-blue accent-4" :class="{
+                      active: hex == '0091ea',
+                      'same-hue': color.hue == 'light blue',
+                      'same-tone': color.value == 'A700'}" data-hex="0091ea"><a @click.prevent="changeColor('#0091ea', 'light blue', 'A700', 'light-blue,accent-4', $event)" @mousedown.prevent="changeColor('#0091ea', 'light blue', 'A700', 'light-blue,accent-4', $event)"></a>
+              </td>
+            </tr>
+            <tr>
+              <th :class="{ active: 'cyan' == color.hue }">cyan</th>
+              <td class="cyan lighten-5" :class="{
+                      active: hex == 'e0f7fa',
+                      'same-hue': color.hue == 'cyan',
+                      'same-tone': color.value == '50'}" data-hex="e0f7fa"><a @click.prevent="changeColor('#e0f7fa', 'cyan', '50', 'cyan,lighten-5', $event)" @mousedown.prevent="changeColor('#e0f7fa', 'cyan', '50', 'cyan,lighten-5', $event)"></a>
+              </td>
+              <td class="cyan lighten-4" :class="{
+                      active: hex == 'b2ebf2',
+                      'same-hue': color.hue == 'cyan',
+                      'same-tone': color.value == '100'}" data-hex="b2ebf2"><a @click.prevent="changeColor('#b2ebf2', 'cyan', '100', 'cyan,lighten-4', $event)" @mousedown.prevent="changeColor('#b2ebf2', 'cyan', '100', 'cyan,lighten-4', $event)"></a>
+              </td>
+              <td class="cyan lighten-3" :class="{
+                      active: hex == '80deea',
+                      'same-hue': color.hue == 'cyan',
+                      'same-tone': color.value == '200'}" data-hex="80deea"><a @click.prevent="changeColor('#80deea', 'cyan', '200', 'cyan,lighten-3', $event)" @mousedown.prevent="changeColor('#80deea', 'cyan', '200', 'cyan,lighten-3', $event)"></a>
+              </td>
+              <td class="cyan lighten-2" :class="{
+                      active: hex == '4dd0e1',
+                      'same-hue': color.hue == 'cyan',
+                      'same-tone': color.value == '300'}" data-hex="4dd0e1"><a @click.prevent="changeColor('#4dd0e1', 'cyan', '300', 'cyan,lighten-2', $event)" @mousedown.prevent="changeColor('#4dd0e1', 'cyan', '300', 'cyan,lighten-2', $event)"></a>
+              </td>
+              <td class="cyan lighten-1" :class="{
+                      active: hex == '26c6da',
+                      'same-hue': color.hue == 'cyan',
+                      'same-tone': color.value == '400'}" data-hex="26c6da"><a @click.prevent="changeColor('#26c6da', 'cyan', '400', 'cyan,lighten-1', $event)" @mousedown.prevent="changeColor('#26c6da', 'cyan', '400', 'cyan,lighten-1', $event)"></a>
+              </td>
+              <td class="cyan undefined" :class="{
+                      active: hex == '00bcd4',
+                      'same-hue': color.hue == 'cyan',
+                      'same-tone': color.value == '500'}" data-hex="00bcd4"><a @click.prevent="changeColor('#00bcd4', 'cyan', '500', 'cyan', $event)" @mousedown.prevent="changeColor('#00bcd4', 'cyan', '500', 'cyan', $event)"></a>
+              </td>
+              <td class="cyan darken-1" :class="{
+                      active: hex == '00acc1',
+                      'same-hue': color.hue == 'cyan',
+                      'same-tone': color.value == '600'}" data-hex="00acc1"><a @click.prevent="changeColor('#00acc1', 'cyan', '600', 'cyan,darken-1', $event)" @mousedown.prevent="changeColor('#00acc1', 'cyan', '600', 'cyan,darken-1', $event)"></a>
+              </td>
+              <td class="cyan darken-2" :class="{
+                      active: hex == '0097a7',
+                      'same-hue': color.hue == 'cyan',
+                      'same-tone': color.value == '700'}" data-hex="0097a7"><a @click.prevent="changeColor('#0097a7', 'cyan', '700', 'cyan,darken-2', $event)" @mousedown.prevent="changeColor('#0097a7', 'cyan', '700', 'cyan,darken-2', $event)"></a>
+              </td>
+              <td class="cyan darken-3" :class="{
+                      active: hex == '00838f',
+                      'same-hue': color.hue == 'cyan',
+                      'same-tone': color.value == '800'}" data-hex="00838f"><a @click.prevent="changeColor('#00838f', 'cyan', '800', 'cyan,darken-3', $event)" @mousedown.prevent="changeColor('#00838f', 'cyan', '800', 'cyan,darken-3', $event)"></a>
+              </td>
+              <td class="cyan darken-4" :class="{
+                      active: hex == '006064',
+                      'same-hue': color.hue == 'cyan',
+                      'same-tone': color.value == '900'}" data-hex="006064"><a @click.prevent="changeColor('#006064', 'cyan', '900', 'cyan,darken-4', $event)" @mousedown.prevent="changeColor('#006064', 'cyan', '900', 'cyan,darken-4', $event)"></a>
+              </td>
+              <td class="cyan accent-1" :class="{
+                      active: hex == '84ffff',
+                      'same-hue': color.hue == 'cyan',
+                      'same-tone': color.value == 'A100'}" data-hex="84ffff"><a @click.prevent="changeColor('#84ffff', 'cyan', 'A100', 'cyan,accent-1', $event)" @mousedown.prevent="changeColor('#84ffff', 'cyan', 'A100', 'cyan,accent-1', $event)"></a>
+              </td>
+              <td class="cyan accent-2" :class="{
+                      active: hex == '18ffff',
+                      'same-hue': color.hue == 'cyan',
+                      'same-tone': color.value == 'A200'}" data-hex="18ffff"><a @click.prevent="changeColor('#18ffff', 'cyan', 'A200', 'cyan,accent-2', $event)" @mousedown.prevent="changeColor('#18ffff', 'cyan', 'A200', 'cyan,accent-2', $event)"></a>
+              </td>
+              <td class="cyan accent-3" :class="{
+                      active: hex == '00e5ff',
+                      'same-hue': color.hue == 'cyan',
+                      'same-tone': color.value == 'A400'}" data-hex="00e5ff"><a @click.prevent="changeColor('#00e5ff', 'cyan', 'A400', 'cyan,accent-3', $event)" @mousedown.prevent="changeColor('#00e5ff', 'cyan', 'A400', 'cyan,accent-3', $event)"></a>
+              </td>
+              <td class="cyan accent-4" :class="{
+                      active: hex == '00b8d4',
+                      'same-hue': color.hue == 'cyan',
+                      'same-tone': color.value == 'A700'}" data-hex="00b8d4"><a @click.prevent="changeColor('#00b8d4', 'cyan', 'A700', 'cyan,accent-4', $event)" @mousedown.prevent="changeColor('#00b8d4', 'cyan', 'A700', 'cyan,accent-4', $event)"></a>
+              </td>
+            </tr>
+            <tr>
+              <th :class="{ active: 'teal' == color.hue }">teal</th>
+              <td class="teal lighten-5" :class="{
+                      active: hex == 'e0f2f1',
+                      'same-hue': color.hue == 'teal',
+                      'same-tone': color.value == '50'}" data-hex="e0f2f1"><a @click.prevent="changeColor('#e0f2f1', 'teal', '50', 'teal,lighten-5', $event)" @mousedown.prevent="changeColor('#e0f2f1', 'teal', '50', 'teal,lighten-5', $event)"></a>
+              </td>
+              <td class="teal lighten-4" :class="{
+                      active: hex == 'b2dfdb',
+                      'same-hue': color.hue == 'teal',
+                      'same-tone': color.value == '100'}" data-hex="b2dfdb"><a @click.prevent="changeColor('#b2dfdb', 'teal', '100', 'teal,lighten-4', $event)" @mousedown.prevent="changeColor('#b2dfdb', 'teal', '100', 'teal,lighten-4', $event)"></a>
+              </td>
+              <td class="teal lighten-3" :class="{
+                      active: hex == '80cbc4',
+                      'same-hue': color.hue == 'teal',
+                      'same-tone': color.value == '200'}" data-hex="80cbc4"><a @click.prevent="changeColor('#80cbc4', 'teal', '200', 'teal,lighten-3', $event)" @mousedown.prevent="changeColor('#80cbc4', 'teal', '200', 'teal,lighten-3', $event)"></a>
+              </td>
+              <td class="teal lighten-2" :class="{
+                      active: hex == '4db6ac',
+                      'same-hue': color.hue == 'teal',
+                      'same-tone': color.value == '300'}" data-hex="4db6ac"><a @click.prevent="changeColor('#4db6ac', 'teal', '300', 'teal,lighten-2', $event)" @mousedown.prevent="changeColor('#4db6ac', 'teal', '300', 'teal,lighten-2', $event)"></a>
+              </td>
+              <td class="teal lighten-1" :class="{
+                      active: hex == '26a69a',
+                      'same-hue': color.hue == 'teal',
+                      'same-tone': color.value == '400'}" data-hex="26a69a"><a @click.prevent="changeColor('#26a69a', 'teal', '400', 'teal,lighten-1', $event)" @mousedown.prevent="changeColor('#26a69a', 'teal', '400', 'teal,lighten-1', $event)"></a>
+              </td>
+              <td class="teal undefined" :class="{
+                      active: hex == '009688',
+                      'same-hue': color.hue == 'teal',
+                      'same-tone': color.value == '500'}" data-hex="009688"><a @click.prevent="changeColor('#009688', 'teal', '500', 'teal', $event)" @mousedown.prevent="changeColor('#009688', 'teal', '500', 'teal', $event)"></a>
+              </td>
+              <td class="teal darken-1" :class="{
+                      active: hex == '00897b',
+                      'same-hue': color.hue == 'teal',
+                      'same-tone': color.value == '600'}" data-hex="00897b"><a @click.prevent="changeColor('#00897b', 'teal', '600', 'teal,darken-1', $event)" @mousedown.prevent="changeColor('#00897b', 'teal', '600', 'teal,darken-1', $event)"></a>
+              </td>
+              <td class="teal darken-2" :class="{
+                      active: hex == '00796b',
+                      'same-hue': color.hue == 'teal',
+                      'same-tone': color.value == '700'}" data-hex="00796b"><a @click.prevent="changeColor('#00796b', 'teal', '700', 'teal,darken-2', $event)" @mousedown.prevent="changeColor('#00796b', 'teal', '700', 'teal,darken-2', $event)"></a>
+              </td>
+              <td class="teal darken-3" :class="{
+                      active: hex == '00695c',
+                      'same-hue': color.hue == 'teal',
+                      'same-tone': color.value == '800'}" data-hex="00695c"><a @click.prevent="changeColor('#00695c', 'teal', '800', 'teal,darken-3', $event)" @mousedown.prevent="changeColor('#00695c', 'teal', '800', 'teal,darken-3', $event)"></a>
+              </td>
+              <td class="teal darken-4" :class="{
+                      active: hex == '004d40',
+                      'same-hue': color.hue == 'teal',
+                      'same-tone': color.value == '900'}" data-hex="004d40"><a @click.prevent="changeColor('#004d40', 'teal', '900', 'teal,darken-4', $event)" @mousedown.prevent="changeColor('#004d40', 'teal', '900', 'teal,darken-4', $event)"></a>
+              </td>
+              <td class="teal accent-1" :class="{
+                      active: hex == 'a7ffeb',
+                      'same-hue': color.hue == 'teal',
+                      'same-tone': color.value == 'A100'}" data-hex="a7ffeb"><a @click.prevent="changeColor('#a7ffeb', 'teal', 'A100', 'teal,accent-1', $event)" @mousedown.prevent="changeColor('#a7ffeb', 'teal', 'A100', 'teal,accent-1', $event)"></a>
+              </td>
+              <td class="teal accent-2" :class="{
+                      active: hex == '64ffda',
+                      'same-hue': color.hue == 'teal',
+                      'same-tone': color.value == 'A200'}" data-hex="64ffda"><a @click.prevent="changeColor('#64ffda', 'teal', 'A200', 'teal,accent-2', $event)" @mousedown.prevent="changeColor('#64ffda', 'teal', 'A200', 'teal,accent-2', $event)"></a>
+              </td>
+              <td class="teal accent-3" :class="{
+                      active: hex == '1de9b6',
+                      'same-hue': color.hue == 'teal',
+                      'same-tone': color.value == 'A400'}" data-hex="1de9b6"><a @click.prevent="changeColor('#1de9b6', 'teal', 'A400', 'teal,accent-3', $event)" @mousedown.prevent="changeColor('#1de9b6', 'teal', 'A400', 'teal,accent-3', $event)"></a>
+              </td>
+              <td class="teal accent-4" :class="{
+                      active: hex == '00bfa5',
+                      'same-hue': color.hue == 'teal',
+                      'same-tone': color.value == 'A700'}" data-hex="00bfa5"><a @click.prevent="changeColor('#00bfa5', 'teal', 'A700', 'teal,accent-4', $event)" @mousedown.prevent="changeColor('#00bfa5', 'teal', 'A700', 'teal,accent-4', $event)"></a>
+              </td>
+            </tr>
+            <tr>
+              <th :class="{ active: 'green' == color.hue }">green</th>
+              <td class="green lighten-5" :class="{
+                      active: hex == 'e8f5e9',
+                      'same-hue': color.hue == 'green',
+                      'same-tone': color.value == '50'}" data-hex="e8f5e9"><a @click.prevent="changeColor('#e8f5e9', 'green', '50', 'green,lighten-5', $event)" @mousedown.prevent="changeColor('#e8f5e9', 'green', '50', 'green,lighten-5', $event)"></a>
+              </td>
+              <td class="green lighten-4" :class="{
+                      active: hex == 'c8e6c9',
+                      'same-hue': color.hue == 'green',
+                      'same-tone': color.value == '100'}" data-hex="c8e6c9"><a @click.prevent="changeColor('#c8e6c9', 'green', '100', 'green,lighten-4', $event)" @mousedown.prevent="changeColor('#c8e6c9', 'green', '100', 'green,lighten-4', $event)"></a>
+              </td>
+              <td class="green lighten-3" :class="{
+                      active: hex == 'a5d6a7',
+                      'same-hue': color.hue == 'green',
+                      'same-tone': color.value == '200'}" data-hex="a5d6a7"><a @click.prevent="changeColor('#a5d6a7', 'green', '200', 'green,lighten-3', $event)" @mousedown.prevent="changeColor('#a5d6a7', 'green', '200', 'green,lighten-3', $event)"></a>
+              </td>
+              <td class="green lighten-2" :class="{
+                      active: hex == '81c784',
+                      'same-hue': color.hue == 'green',
+                      'same-tone': color.value == '300'}" data-hex="81c784"><a @click.prevent="changeColor('#81c784', 'green', '300', 'green,lighten-2', $event)" @mousedown.prevent="changeColor('#81c784', 'green', '300', 'green,lighten-2', $event)"></a>
+              </td>
+              <td class="green lighten-1" :class="{
+                      active: hex == '66bb6a',
+                      'same-hue': color.hue == 'green',
+                      'same-tone': color.value == '400'}" data-hex="66bb6a"><a @click.prevent="changeColor('#66bb6a', 'green', '400', 'green,lighten-1', $event)" @mousedown.prevent="changeColor('#66bb6a', 'green', '400', 'green,lighten-1', $event)"></a>
+              </td>
+              <td class="green undefined" :class="{
+                      active: hex == '4caf50',
+                      'same-hue': color.hue == 'green',
+                      'same-tone': color.value == '500'}" data-hex="4caf50"><a @click.prevent="changeColor('#4caf50', 'green', '500', 'green', $event)" @mousedown.prevent="changeColor('#4caf50', 'green', '500', 'green', $event)"></a>
+              </td>
+              <td class="green darken-1" :class="{
+                      active: hex == '43a047',
+                      'same-hue': color.hue == 'green',
+                      'same-tone': color.value == '600'}" data-hex="43a047"><a @click.prevent="changeColor('#43a047', 'green', '600', 'green,darken-1', $event)" @mousedown.prevent="changeColor('#43a047', 'green', '600', 'green,darken-1', $event)"></a>
+              </td>
+              <td class="green darken-2" :class="{
+                      active: hex == '388e3c',
+                      'same-hue': color.hue == 'green',
+                      'same-tone': color.value == '700'}" data-hex="388e3c"><a @click.prevent="changeColor('#388e3c', 'green', '700', 'green,darken-2', $event)" @mousedown.prevent="changeColor('#388e3c', 'green', '700', 'green,darken-2', $event)"></a>
+              </td>
+              <td class="green darken-3" :class="{
+                      active: hex == '2e7d32',
+                      'same-hue': color.hue == 'green',
+                      'same-tone': color.value == '800'}" data-hex="2e7d32"><a @click.prevent="changeColor('#2e7d32', 'green', '800', 'green,darken-3', $event)" @mousedown.prevent="changeColor('#2e7d32', 'green', '800', 'green,darken-3', $event)"></a>
+              </td>
+              <td class="green darken-4" :class="{
+                      active: hex == '1b5e20',
+                      'same-hue': color.hue == 'green',
+                      'same-tone': color.value == '900'}" data-hex="1b5e20"><a @click.prevent="changeColor('#1b5e20', 'green', '900', 'green,darken-4', $event)" @mousedown.prevent="changeColor('#1b5e20', 'green', '900', 'green,darken-4', $event)"></a>
+              </td>
+              <td class="green accent-1" :class="{
+                      active: hex == 'b9f6ca',
+                      'same-hue': color.hue == 'green',
+                      'same-tone': color.value == 'A100'}" data-hex="b9f6ca"><a @click.prevent="changeColor('#b9f6ca', 'green', 'A100', 'green,accent-1', $event)" @mousedown.prevent="changeColor('#b9f6ca', 'green', 'A100', 'green,accent-1', $event)"></a>
+              </td>
+              <td class="green accent-2" :class="{
+                      active: hex == '69f0ae',
+                      'same-hue': color.hue == 'green',
+                      'same-tone': color.value == 'A200'}" data-hex="69f0ae"><a @click.prevent="changeColor('#69f0ae', 'green', 'A200', 'green,accent-2', $event)" @mousedown.prevent="changeColor('#69f0ae', 'green', 'A200', 'green,accent-2', $event)"></a>
+              </td>
+              <td class="green accent-3" :class="{
+                      active: hex == '00e676',
+                      'same-hue': color.hue == 'green',
+                      'same-tone': color.value == 'A400'}" data-hex="00e676"><a @click.prevent="changeColor('#00e676', 'green', 'A400', 'green,accent-3', $event)" @mousedown.prevent="changeColor('#00e676', 'green', 'A400', 'green,accent-3', $event)"></a>
+              </td>
+              <td class="green accent-4" :class="{
+                      active: hex == '00c853',
+                      'same-hue': color.hue == 'green',
+                      'same-tone': color.value == 'A700'}" data-hex="00c853"><a @click.prevent="changeColor('#00c853', 'green', 'A700', 'green,accent-4', $event)" @mousedown.prevent="changeColor('#00c853', 'green', 'A700', 'green,accent-4', $event)"></a>
+              </td>
+            </tr>
+            <tr>
+              <th :class="{ active: 'light green' == color.hue }">light green</th>
+              <td class="light-green lighten-5" :class="{
+                      active: hex == 'f1f8e9',
+                      'same-hue': color.hue == 'light green',
+                      'same-tone': color.value == '50'}" data-hex="f1f8e9"><a @click.prevent="changeColor('#f1f8e9', 'light green', '50', 'light-green,lighten-5', $event)" @mousedown.prevent="changeColor('#f1f8e9', 'light green', '50', 'light-green,lighten-5', $event)"></a>
+              </td>
+              <td class="light-green lighten-4" :class="{
+                      active: hex == 'dcedc8',
+                      'same-hue': color.hue == 'light green',
+                      'same-tone': color.value == '100'}" data-hex="dcedc8"><a @click.prevent="changeColor('#dcedc8', 'light green', '100', 'light-green,lighten-4', $event)" @mousedown.prevent="changeColor('#dcedc8', 'light green', '100', 'light-green,lighten-4', $event)"></a>
+              </td>
+              <td class="light-green lighten-3" :class="{
+                      active: hex == 'c5e1a5',
+                      'same-hue': color.hue == 'light green',
+                      'same-tone': color.value == '200'}" data-hex="c5e1a5"><a @click.prevent="changeColor('#c5e1a5', 'light green', '200', 'light-green,lighten-3', $event)" @mousedown.prevent="changeColor('#c5e1a5', 'light green', '200', 'light-green,lighten-3', $event)"></a>
+              </td>
+              <td class="light-green lighten-2" :class="{
+                      active: hex == 'aed581',
+                      'same-hue': color.hue == 'light green',
+                      'same-tone': color.value == '300'}" data-hex="aed581"><a @click.prevent="changeColor('#aed581', 'light green', '300', 'light-green,lighten-2', $event)" @mousedown.prevent="changeColor('#aed581', 'light green', '300', 'light-green,lighten-2', $event)"></a>
+              </td>
+              <td class="light-green lighten-1" :class="{
+                      active: hex == '9ccc65',
+                      'same-hue': color.hue == 'light green',
+                      'same-tone': color.value == '400'}" data-hex="9ccc65"><a @click.prevent="changeColor('#9ccc65', 'light green', '400', 'light-green,lighten-1', $event)" @mousedown.prevent="changeColor('#9ccc65', 'light green', '400', 'light-green,lighten-1', $event)"></a>
+              </td>
+              <td class="light-green undefined" :class="{
+                      active: hex == '8bc34a',
+                      'same-hue': color.hue == 'light green',
+                      'same-tone': color.value == '500'}" data-hex="8bc34a"><a @click.prevent="changeColor('#8bc34a', 'light green', '500', 'light-green', $event)" @mousedown.prevent="changeColor('#8bc34a', 'light green', '500', 'light-green', $event)"></a>
+              </td>
+              <td class="light-green darken-1" :class="{
+                      active: hex == '7cb342',
+                      'same-hue': color.hue == 'light green',
+                      'same-tone': color.value == '600'}" data-hex="7cb342"><a @click.prevent="changeColor('#7cb342', 'light green', '600', 'light-green,darken-1', $event)" @mousedown.prevent="changeColor('#7cb342', 'light green', '600', 'light-green,darken-1', $event)"></a>
+              </td>
+              <td class="light-green darken-2" :class="{
+                      active: hex == '689f38',
+                      'same-hue': color.hue == 'light green',
+                      'same-tone': color.value == '700'}" data-hex="689f38"><a @click.prevent="changeColor('#689f38', 'light green', '700', 'light-green,darken-2', $event)" @mousedown.prevent="changeColor('#689f38', 'light green', '700', 'light-green,darken-2', $event)"></a>
+              </td>
+              <td class="light-green darken-3" :class="{
+                      active: hex == '558b2f',
+                      'same-hue': color.hue == 'light green',
+                      'same-tone': color.value == '800'}" data-hex="558b2f"><a @click.prevent="changeColor('#558b2f', 'light green', '800', 'light-green,darken-3', $event)" @mousedown.prevent="changeColor('#558b2f', 'light green', '800', 'light-green,darken-3', $event)"></a>
+              </td>
+              <td class="light-green darken-4" :class="{
+                      active: hex == '33691e',
+                      'same-hue': color.hue == 'light green',
+                      'same-tone': color.value == '900'}" data-hex="33691e"><a @click.prevent="changeColor('#33691e', 'light green', '900', 'light-green,darken-4', $event)" @mousedown.prevent="changeColor('#33691e', 'light green', '900', 'light-green,darken-4', $event)"></a>
+              </td>
+              <td class="light-green accent-1" :class="{
+                      active: hex == 'ccff90',
+                      'same-hue': color.hue == 'light green',
+                      'same-tone': color.value == 'A100'}" data-hex="ccff90"><a @click.prevent="changeColor('#ccff90', 'light green', 'A100', 'light-green,accent-1', $event)" @mousedown.prevent="changeColor('#ccff90', 'light green', 'A100', 'light-green,accent-1', $event)"></a>
+              </td>
+              <td class="light-green accent-2" :class="{
+                      active: hex == 'b2ff59',
+                      'same-hue': color.hue == 'light green',
+                      'same-tone': color.value == 'A200'}" data-hex="b2ff59"><a @click.prevent="changeColor('#b2ff59', 'light green', 'A200', 'light-green,accent-2', $event)" @mousedown.prevent="changeColor('#b2ff59', 'light green', 'A200', 'light-green,accent-2', $event)"></a>
+              </td>
+              <td class="light-green accent-3" :class="{
+                      active: hex == '76ff03',
+                      'same-hue': color.hue == 'light green',
+                      'same-tone': color.value == 'A400'}" data-hex="76ff03"><a @click.prevent="changeColor('#76ff03', 'light green', 'A400', 'light-green,accent-3', $event)" @mousedown.prevent="changeColor('#76ff03', 'light green', 'A400', 'light-green,accent-3', $event)"></a>
+              </td>
+              <td class="light-green accent-4" :class="{
+                      active: hex == '64dd17',
+                      'same-hue': color.hue == 'light green',
+                      'same-tone': color.value == 'A700'}" data-hex="64dd17"><a @click.prevent="changeColor('#64dd17', 'light green', 'A700', 'light-green,accent-4', $event)" @mousedown.prevent="changeColor('#64dd17', 'light green', 'A700', 'light-green,accent-4', $event)"></a>
+              </td>
+            </tr>
+            <tr>
+              <th :class="{ active: 'lime' == color.hue }">lime</th>
+              <td class="lime lighten-5" :class="{
+                      active: hex == 'f9fbe7',
+                      'same-hue': color.hue == 'lime',
+                      'same-tone': color.value == '50'}" data-hex="f9fbe7"><a @click.prevent="changeColor('#f9fbe7', 'lime', '50', 'lime,lighten-5', $event)" @mousedown.prevent="changeColor('#f9fbe7', 'lime', '50', 'lime,lighten-5', $event)"></a>
+              </td>
+              <td class="lime lighten-4" :class="{
+                      active: hex == 'f0f4c3',
+                      'same-hue': color.hue == 'lime',
+                      'same-tone': color.value == '100'}" data-hex="f0f4c3"><a @click.prevent="changeColor('#f0f4c3', 'lime', '100', 'lime,lighten-4', $event)" @mousedown.prevent="changeColor('#f0f4c3', 'lime', '100', 'lime,lighten-4', $event)"></a>
+              </td>
+              <td class="lime lighten-3" :class="{
+                      active: hex == 'e6ee9c',
+                      'same-hue': color.hue == 'lime',
+                      'same-tone': color.value == '200'}" data-hex="e6ee9c"><a @click.prevent="changeColor('#e6ee9c', 'lime', '200', 'lime,lighten-3', $event)" @mousedown.prevent="changeColor('#e6ee9c', 'lime', '200', 'lime,lighten-3', $event)"></a>
+              </td>
+              <td class="lime lighten-2" :class="{
+                      active: hex == 'dce775',
+                      'same-hue': color.hue == 'lime',
+                      'same-tone': color.value == '300'}" data-hex="dce775"><a @click.prevent="changeColor('#dce775', 'lime', '300', 'lime,lighten-2', $event)" @mousedown.prevent="changeColor('#dce775', 'lime', '300', 'lime,lighten-2', $event)"></a>
+              </td>
+              <td class="lime lighten-1" :class="{
+                      active: hex == 'd4e157',
+                      'same-hue': color.hue == 'lime',
+                      'same-tone': color.value == '400'}" data-hex="d4e157"><a @click.prevent="changeColor('#d4e157', 'lime', '400', 'lime,lighten-1', $event)" @mousedown.prevent="changeColor('#d4e157', 'lime', '400', 'lime,lighten-1', $event)"></a>
+              </td>
+              <td class="lime undefined" :class="{
+                      active: hex == 'cddc39',
+                      'same-hue': color.hue == 'lime',
+                      'same-tone': color.value == '500'}" data-hex="cddc39"><a @click.prevent="changeColor('#cddc39', 'lime', '500', 'lime', $event)" @mousedown.prevent="changeColor('#cddc39', 'lime', '500', 'lime', $event)"></a>
+              </td>
+              <td class="lime darken-1" :class="{
+                      active: hex == 'c0ca33',
+                      'same-hue': color.hue == 'lime',
+                      'same-tone': color.value == '600'}" data-hex="c0ca33"><a @click.prevent="changeColor('#c0ca33', 'lime', '600', 'lime,darken-1', $event)" @mousedown.prevent="changeColor('#c0ca33', 'lime', '600', 'lime,darken-1', $event)"></a>
+              </td>
+              <td class="lime darken-2" :class="{
+                      active: hex == 'afb42b',
+                      'same-hue': color.hue == 'lime',
+                      'same-tone': color.value == '700'}" data-hex="afb42b"><a @click.prevent="changeColor('#afb42b', 'lime', '700', 'lime,darken-2', $event)" @mousedown.prevent="changeColor('#afb42b', 'lime', '700', 'lime,darken-2', $event)"></a>
+              </td>
+              <td class="lime darken-3" :class="{
+                      active: hex == '9e9d24',
+                      'same-hue': color.hue == 'lime',
+                      'same-tone': color.value == '800'}" data-hex="9e9d24"><a @click.prevent="changeColor('#9e9d24', 'lime', '800', 'lime,darken-3', $event)" @mousedown.prevent="changeColor('#9e9d24', 'lime', '800', 'lime,darken-3', $event)"></a>
+              </td>
+              <td class="lime darken-4" :class="{
+                      active: hex == '827717',
+                      'same-hue': color.hue == 'lime',
+                      'same-tone': color.value == '900'}" data-hex="827717"><a @click.prevent="changeColor('#827717', 'lime', '900', 'lime,darken-4', $event)" @mousedown.prevent="changeColor('#827717', 'lime', '900', 'lime,darken-4', $event)"></a>
+              </td>
+              <td class="lime accent-1" :class="{
+                      active: hex == 'f4ff81',
+                      'same-hue': color.hue == 'lime',
+                      'same-tone': color.value == 'A100'}" data-hex="f4ff81"><a @click.prevent="changeColor('#f4ff81', 'lime', 'A100', 'lime,accent-1', $event)" @mousedown.prevent="changeColor('#f4ff81', 'lime', 'A100', 'lime,accent-1', $event)"></a>
+              </td>
+              <td class="lime accent-2" :class="{
+                      active: hex == 'eeff41',
+                      'same-hue': color.hue == 'lime',
+                      'same-tone': color.value == 'A200'}" data-hex="eeff41"><a @click.prevent="changeColor('#eeff41', 'lime', 'A200', 'lime,accent-2', $event)" @mousedown.prevent="changeColor('#eeff41', 'lime', 'A200', 'lime,accent-2', $event)"></a>
+              </td>
+              <td class="lime accent-3" :class="{
+                      active: hex == 'c6ff00',
+                      'same-hue': color.hue == 'lime',
+                      'same-tone': color.value == 'A400'}" data-hex="c6ff00"><a @click.prevent="changeColor('#c6ff00', 'lime', 'A400', 'lime,accent-3', $event)" @mousedown.prevent="changeColor('#c6ff00', 'lime', 'A400', 'lime,accent-3', $event)"></a>
+              </td>
+              <td class="lime accent-4" :class="{
+                      active: hex == 'aeea00',
+                      'same-hue': color.hue == 'lime',
+                      'same-tone': color.value == 'A700'}" data-hex="aeea00"><a @click.prevent="changeColor('#aeea00', 'lime', 'A700', 'lime,accent-4', $event)" @mousedown.prevent="changeColor('#aeea00', 'lime', 'A700', 'lime,accent-4', $event)"></a>
+              </td>
+            </tr>
+            <tr>
+              <th :class="{ active: 'yellow' == color.hue }">yellow</th>
+              <td class="yellow lighten-5" :class="{
+                      active: hex == 'fffde7',
+                      'same-hue': color.hue == 'yellow',
+                      'same-tone': color.value == '50'}" data-hex="fffde7"><a @click.prevent="changeColor('#fffde7', 'yellow', '50', 'yellow,lighten-5', $event)" @mousedown.prevent="changeColor('#fffde7', 'yellow', '50', 'yellow,lighten-5', $event)"></a>
+              </td>
+              <td class="yellow lighten-4" :class="{
+                      active: hex == 'fff9c4',
+                      'same-hue': color.hue == 'yellow',
+                      'same-tone': color.value == '100'}" data-hex="fff9c4"><a @click.prevent="changeColor('#fff9c4', 'yellow', '100', 'yellow,lighten-4', $event)" @mousedown.prevent="changeColor('#fff9c4', 'yellow', '100', 'yellow,lighten-4', $event)"></a>
+              </td>
+              <td class="yellow lighten-3" :class="{
+                      active: hex == 'fff59d',
+                      'same-hue': color.hue == 'yellow',
+                      'same-tone': color.value == '200'}" data-hex="fff59d"><a @click.prevent="changeColor('#fff59d', 'yellow', '200', 'yellow,lighten-3', $event)" @mousedown.prevent="changeColor('#fff59d', 'yellow', '200', 'yellow,lighten-3', $event)"></a>
+              </td>
+              <td class="yellow lighten-2" :class="{
+                      active: hex == 'fff176',
+                      'same-hue': color.hue == 'yellow',
+                      'same-tone': color.value == '300'}" data-hex="fff176"><a @click.prevent="changeColor('#fff176', 'yellow', '300', 'yellow,lighten-2', $event)" @mousedown.prevent="changeColor('#fff176', 'yellow', '300', 'yellow,lighten-2', $event)"></a>
+              </td>
+              <td class="yellow lighten-1" :class="{
+                      active: hex == 'ffee58',
+                      'same-hue': color.hue == 'yellow',
+                      'same-tone': color.value == '400'}" data-hex="ffee58"><a @click.prevent="changeColor('#ffee58', 'yellow', '400', 'yellow,lighten-1', $event)" @mousedown.prevent="changeColor('#ffee58', 'yellow', '400', 'yellow,lighten-1', $event)"></a>
+              </td>
+              <td class="yellow undefined" :class="{
+                      active: hex == 'ffeb3b',
+                      'same-hue': color.hue == 'yellow',
+                      'same-tone': color.value == '500'}" data-hex="ffeb3b"><a @click.prevent="changeColor('#ffeb3b', 'yellow', '500', 'yellow', $event)" @mousedown.prevent="changeColor('#ffeb3b', 'yellow', '500', 'yellow', $event)"></a>
+              </td>
+              <td class="yellow darken-1" :class="{
+                      active: hex == 'fdd835',
+                      'same-hue': color.hue == 'yellow',
+                      'same-tone': color.value == '600'}" data-hex="fdd835"><a @click.prevent="changeColor('#fdd835', 'yellow', '600', 'yellow,darken-1', $event)" @mousedown.prevent="changeColor('#fdd835', 'yellow', '600', 'yellow,darken-1', $event)"></a>
+              </td>
+              <td class="yellow darken-2" :class="{
+                      active: hex == 'fbc02d',
+                      'same-hue': color.hue == 'yellow',
+                      'same-tone': color.value == '700'}" data-hex="fbc02d"><a @click.prevent="changeColor('#fbc02d', 'yellow', '700', 'yellow,darken-2', $event)" @mousedown.prevent="changeColor('#fbc02d', 'yellow', '700', 'yellow,darken-2', $event)"></a>
+              </td>
+              <td class="yellow darken-3" :class="{
+                      active: hex == 'f9a825',
+                      'same-hue': color.hue == 'yellow',
+                      'same-tone': color.value == '800'}" data-hex="f9a825"><a @click.prevent="changeColor('#f9a825', 'yellow', '800', 'yellow,darken-3', $event)" @mousedown.prevent="changeColor('#f9a825', 'yellow', '800', 'yellow,darken-3', $event)"></a>
+              </td>
+              <td class="yellow darken-4" :class="{
+                      active: hex == 'f57f17',
+                      'same-hue': color.hue == 'yellow',
+                      'same-tone': color.value == '900'}" data-hex="f57f17"><a @click.prevent="changeColor('#f57f17', 'yellow', '900', 'yellow,darken-4', $event)" @mousedown.prevent="changeColor('#f57f17', 'yellow', '900', 'yellow,darken-4', $event)"></a>
+              </td>
+              <td class="yellow accent-1" :class="{
+                      active: hex == 'ffff8d',
+                      'same-hue': color.hue == 'yellow',
+                      'same-tone': color.value == 'A100'}" data-hex="ffff8d"><a @click.prevent="changeColor('#ffff8d', 'yellow', 'A100', 'yellow,accent-1', $event)" @mousedown.prevent="changeColor('#ffff8d', 'yellow', 'A100', 'yellow,accent-1', $event)"></a>
+              </td>
+              <td class="yellow accent-2" :class="{
+                      active: hex == 'ffff00',
+                      'same-hue': color.hue == 'yellow',
+                      'same-tone': color.value == 'A200'}" data-hex="ffff00"><a @click.prevent="changeColor('#ffff00', 'yellow', 'A200', 'yellow,accent-2', $event)" @mousedown.prevent="changeColor('#ffff00', 'yellow', 'A200', 'yellow,accent-2', $event)"></a>
+              </td>
+              <td class="yellow accent-3" :class="{
+                      active: hex == 'ffea00',
+                      'same-hue': color.hue == 'yellow',
+                      'same-tone': color.value == 'A400'}" data-hex="ffea00"><a @click.prevent="changeColor('#ffea00', 'yellow', 'A400', 'yellow,accent-3', $event)" @mousedown.prevent="changeColor('#ffea00', 'yellow', 'A400', 'yellow,accent-3', $event)"></a>
+              </td>
+              <td class="yellow accent-4" :class="{
+                      active: hex == 'ffd600',
+                      'same-hue': color.hue == 'yellow',
+                      'same-tone': color.value == 'A700'}" data-hex="ffd600"><a @click.prevent="changeColor('#ffd600', 'yellow', 'A700', 'yellow,accent-4', $event)" @mousedown.prevent="changeColor('#ffd600', 'yellow', 'A700', 'yellow,accent-4', $event)"></a>
+              </td>
+            </tr>
+            <tr>
+              <th :class="{ active: 'amber' == color.hue }">amber</th>
+              <td class="amber lighten-5" :class="{
+                      active: hex == 'fff8e1',
+                      'same-hue': color.hue == 'amber',
+                      'same-tone': color.value == '50'}" data-hex="fff8e1"><a @click.prevent="changeColor('#fff8e1', 'amber', '50', 'amber,lighten-5', $event)" @mousedown.prevent="changeColor('#fff8e1', 'amber', '50', 'amber,lighten-5', $event)"></a>
+              </td>
+              <td class="amber lighten-4" :class="{
+                      active: hex == 'ffecb3',
+                      'same-hue': color.hue == 'amber',
+                      'same-tone': color.value == '100'}" data-hex="ffecb3"><a @click.prevent="changeColor('#ffecb3', 'amber', '100', 'amber,lighten-4', $event)" @mousedown.prevent="changeColor('#ffecb3', 'amber', '100', 'amber,lighten-4', $event)"></a>
+              </td>
+              <td class="amber lighten-3" :class="{
+                      active: hex == 'ffe082',
+                      'same-hue': color.hue == 'amber',
+                      'same-tone': color.value == '200'}" data-hex="ffe082"><a @click.prevent="changeColor('#ffe082', 'amber', '200', 'amber,lighten-3', $event)" @mousedown.prevent="changeColor('#ffe082', 'amber', '200', 'amber,lighten-3', $event)"></a>
+              </td>
+              <td class="amber lighten-2" :class="{
+                      active: hex == 'ffd54f',
+                      'same-hue': color.hue == 'amber',
+                      'same-tone': color.value == '300'}" data-hex="ffd54f"><a @click.prevent="changeColor('#ffd54f', 'amber', '300', 'amber,lighten-2', $event)" @mousedown.prevent="changeColor('#ffd54f', 'amber', '300', 'amber,lighten-2', $event)"></a>
+              </td>
+              <td class="amber lighten-1" :class="{
+                      active: hex == 'ffca28',
+                      'same-hue': color.hue == 'amber',
+                      'same-tone': color.value == '400'}" data-hex="ffca28"><a @click.prevent="changeColor('#ffca28', 'amber', '400', 'amber,lighten-1', $event)" @mousedown.prevent="changeColor('#ffca28', 'amber', '400', 'amber,lighten-1', $event)"></a>
+              </td>
+              <td class="amber undefined" :class="{
+                      active: hex == 'ffc107',
+                      'same-hue': color.hue == 'amber',
+                      'same-tone': color.value == '500'}" data-hex="ffc107"><a @click.prevent="changeColor('#ffc107', 'amber', '500', 'amber', $event)" @mousedown.prevent="changeColor('#ffc107', 'amber', '500', 'amber', $event)"></a>
+              </td>
+              <td class="amber darken-1" :class="{
+                      active: hex == 'ffb300',
+                      'same-hue': color.hue == 'amber',
+                      'same-tone': color.value == '600'}" data-hex="ffb300"><a @click.prevent="changeColor('#ffb300', 'amber', '600', 'amber,darken-1', $event)" @mousedown.prevent="changeColor('#ffb300', 'amber', '600', 'amber,darken-1', $event)"></a>
+              </td>
+              <td class="amber darken-2" :class="{
+                      active: hex == 'ffa000',
+                      'same-hue': color.hue == 'amber',
+                      'same-tone': color.value == '700'}" data-hex="ffa000"><a @click.prevent="changeColor('#ffa000', 'amber', '700', 'amber,darken-2', $event)" @mousedown.prevent="changeColor('#ffa000', 'amber', '700', 'amber,darken-2', $event)"></a>
+              </td>
+              <td class="amber darken-3" :class="{
+                      active: hex == 'ff8f00',
+                      'same-hue': color.hue == 'amber',
+                      'same-tone': color.value == '800'}" data-hex="ff8f00"><a @click.prevent="changeColor('#ff8f00', 'amber', '800', 'amber,darken-3', $event)" @mousedown.prevent="changeColor('#ff8f00', 'amber', '800', 'amber,darken-3', $event)"></a>
+              </td>
+              <td class="amber darken-4" :class="{
+                      active: hex == 'ff6f00',
+                      'same-hue': color.hue == 'amber',
+                      'same-tone': color.value == '900'}" data-hex="ff6f00"><a @click.prevent="changeColor('#ff6f00', 'amber', '900', 'amber,darken-4', $event)" @mousedown.prevent="changeColor('#ff6f00', 'amber', '900', 'amber,darken-4', $event)"></a>
+              </td>
+              <td class="amber accent-1" :class="{
+                      active: hex == 'ffe57f',
+                      'same-hue': color.hue == 'amber',
+                      'same-tone': color.value == 'A100'}" data-hex="ffe57f"><a @click.prevent="changeColor('#ffe57f', 'amber', 'A100', 'amber,accent-1', $event)" @mousedown.prevent="changeColor('#ffe57f', 'amber', 'A100', 'amber,accent-1', $event)"></a>
+              </td>
+              <td class="amber accent-2" :class="{
+                      active: hex == 'ffd740',
+                      'same-hue': color.hue == 'amber',
+                      'same-tone': color.value == 'A200'}" data-hex="ffd740"><a @click.prevent="changeColor('#ffd740', 'amber', 'A200', 'amber,accent-2', $event)" @mousedown.prevent="changeColor('#ffd740', 'amber', 'A200', 'amber,accent-2', $event)"></a>
+              </td>
+              <td class="amber accent-3" :class="{
+                      active: hex == 'ffc400',
+                      'same-hue': color.hue == 'amber',
+                      'same-tone': color.value == 'A400'}" data-hex="ffc400"><a @click.prevent="changeColor('#ffc400', 'amber', 'A400', 'amber,accent-3', $event)" @mousedown.prevent="changeColor('#ffc400', 'amber', 'A400', 'amber,accent-3', $event)"></a>
+              </td>
+              <td class="amber accent-4" :class="{
+                      active: hex == 'ffab00',
+                      'same-hue': color.hue == 'amber',
+                      'same-tone': color.value == 'A700'}" data-hex="ffab00"><a @click.prevent="changeColor('#ffab00', 'amber', 'A700', 'amber,accent-4', $event)" @mousedown.prevent="changeColor('#ffab00', 'amber', 'A700', 'amber,accent-4', $event)"></a>
+              </td>
+            </tr>
+            <tr>
+              <th :class="{ active: 'orange' == color.hue }">orange</th>
+              <td class="orange lighten-5" :class="{
+                      active: hex == 'fff3e0',
+                      'same-hue': color.hue == 'orange',
+                      'same-tone': color.value == '50'}" data-hex="fff3e0"><a @click.prevent="changeColor('#fff3e0', 'orange', '50', 'orange,lighten-5', $event)" @mousedown.prevent="changeColor('#fff3e0', 'orange', '50', 'orange,lighten-5', $event)"></a>
+              </td>
+              <td class="orange lighten-4" :class="{
+                      active: hex == 'ffe0b2',
+                      'same-hue': color.hue == 'orange',
+                      'same-tone': color.value == '100'}" data-hex="ffe0b2"><a @click.prevent="changeColor('#ffe0b2', 'orange', '100', 'orange,lighten-4', $event)" @mousedown.prevent="changeColor('#ffe0b2', 'orange', '100', 'orange,lighten-4', $event)"></a>
+              </td>
+              <td class="orange lighten-3" :class="{
+                      active: hex == 'ffcc80',
+                      'same-hue': color.hue == 'orange',
+                      'same-tone': color.value == '200'}" data-hex="ffcc80"><a @click.prevent="changeColor('#ffcc80', 'orange', '200', 'orange,lighten-3', $event)" @mousedown.prevent="changeColor('#ffcc80', 'orange', '200', 'orange,lighten-3', $event)"></a>
+              </td>
+              <td class="orange lighten-2" :class="{
+                      active: hex == 'ffb74d',
+                      'same-hue': color.hue == 'orange',
+                      'same-tone': color.value == '300'}" data-hex="ffb74d"><a @click.prevent="changeColor('#ffb74d', 'orange', '300', 'orange,lighten-2', $event)" @mousedown.prevent="changeColor('#ffb74d', 'orange', '300', 'orange,lighten-2', $event)"></a>
+              </td>
+              <td class="orange lighten-1" :class="{
+                      active: hex == 'ffa726',
+                      'same-hue': color.hue == 'orange',
+                      'same-tone': color.value == '400'}" data-hex="ffa726"><a @click.prevent="changeColor('#ffa726', 'orange', '400', 'orange,lighten-1', $event)" @mousedown.prevent="changeColor('#ffa726', 'orange', '400', 'orange,lighten-1', $event)"></a>
+              </td>
+              <td class="orange undefined" :class="{
+                      active: hex == 'ff9800',
+                      'same-hue': color.hue == 'orange',
+                      'same-tone': color.value == '500'}" data-hex="ff9800"><a @click.prevent="changeColor('#ff9800', 'orange', '500', 'orange', $event)" @mousedown.prevent="changeColor('#ff9800', 'orange', '500', 'orange', $event)"></a>
+              </td>
+              <td class="orange darken-1" :class="{
+                      active: hex == 'fb8c00',
+                      'same-hue': color.hue == 'orange',
+                      'same-tone': color.value == '600'}" data-hex="fb8c00"><a @click.prevent="changeColor('#fb8c00', 'orange', '600', 'orange,darken-1', $event)" @mousedown.prevent="changeColor('#fb8c00', 'orange', '600', 'orange,darken-1', $event)"></a>
+              </td>
+              <td class="orange darken-2" :class="{
+                      active: hex == 'f57c00',
+                      'same-hue': color.hue == 'orange',
+                      'same-tone': color.value == '700'}" data-hex="f57c00"><a @click.prevent="changeColor('#f57c00', 'orange', '700', 'orange,darken-2', $event)" @mousedown.prevent="changeColor('#f57c00', 'orange', '700', 'orange,darken-2', $event)"></a>
+              </td>
+              <td class="orange darken-3" :class="{
+                      active: hex == 'ef6c00',
+                      'same-hue': color.hue == 'orange',
+                      'same-tone': color.value == '800'}" data-hex="ef6c00"><a @click.prevent="changeColor('#ef6c00', 'orange', '800', 'orange,darken-3', $event)" @mousedown.prevent="changeColor('#ef6c00', 'orange', '800', 'orange,darken-3', $event)"></a>
+              </td>
+              <td class="orange darken-4" :class="{
+                      active: hex == 'e65100',
+                      'same-hue': color.hue == 'orange',
+                      'same-tone': color.value == '900'}" data-hex="e65100"><a @click.prevent="changeColor('#e65100', 'orange', '900', 'orange,darken-4', $event)" @mousedown.prevent="changeColor('#e65100', 'orange', '900', 'orange,darken-4', $event)"></a>
+              </td>
+              <td class="orange accent-1" :class="{
+                      active: hex == 'ffd180',
+                      'same-hue': color.hue == 'orange',
+                      'same-tone': color.value == 'A100'}" data-hex="ffd180"><a @click.prevent="changeColor('#ffd180', 'orange', 'A100', 'orange,accent-1', $event)" @mousedown.prevent="changeColor('#ffd180', 'orange', 'A100', 'orange,accent-1', $event)"></a>
+              </td>
+              <td class="orange accent-2" :class="{
+                      active: hex == 'ffab40',
+                      'same-hue': color.hue == 'orange',
+                      'same-tone': color.value == 'A200'}" data-hex="ffab40"><a @click.prevent="changeColor('#ffab40', 'orange', 'A200', 'orange,accent-2', $event)" @mousedown.prevent="changeColor('#ffab40', 'orange', 'A200', 'orange,accent-2', $event)"></a>
+              </td>
+              <td class="orange accent-3" :class="{
+                      active: hex == 'ff9100',
+                      'same-hue': color.hue == 'orange',
+                      'same-tone': color.value == 'A400'}" data-hex="ff9100"><a @click.prevent="changeColor('#ff9100', 'orange', 'A400', 'orange,accent-3', $event)" @mousedown.prevent="changeColor('#ff9100', 'orange', 'A400', 'orange,accent-3', $event)"></a>
+              </td>
+              <td class="orange accent-4" :class="{
+                      active: hex == 'ff6d00',
+                      'same-hue': color.hue == 'orange',
+                      'same-tone': color.value == 'A700'}" data-hex="ff6d00"><a @click.prevent="changeColor('#ff6d00', 'orange', 'A700', 'orange,accent-4', $event)" @mousedown.prevent="changeColor('#ff6d00', 'orange', 'A700', 'orange,accent-4', $event)"></a>
+              </td>
+            </tr>
+            <tr>
+              <th :class="{ active: 'deep orange' == color.hue }">deep orange</th>
+              <td class="deep-orange lighten-5" :class="{
+                      active: hex == 'fbe9e7',
+                      'same-hue': color.hue == 'deep orange',
+                      'same-tone': color.value == '50'}" data-hex="fbe9e7"><a @click.prevent="changeColor('#fbe9e7', 'deep orange', '50', 'deep-orange,lighten-5', $event)" @mousedown.prevent="changeColor('#fbe9e7', 'deep orange', '50', 'deep-orange,lighten-5', $event)"></a>
+              </td>
+              <td class="deep-orange lighten-4" :class="{
+                      active: hex == 'ffccbc',
+                      'same-hue': color.hue == 'deep orange',
+                      'same-tone': color.value == '100'}" data-hex="ffccbc"><a @click.prevent="changeColor('#ffccbc', 'deep orange', '100', 'deep-orange,lighten-4', $event)" @mousedown.prevent="changeColor('#ffccbc', 'deep orange', '100', 'deep-orange,lighten-4', $event)"></a>
+              </td>
+              <td class="deep-orange lighten-3" :class="{
+                      active: hex == 'ffab91',
+                      'same-hue': color.hue == 'deep orange',
+                      'same-tone': color.value == '200'}" data-hex="ffab91"><a @click.prevent="changeColor('#ffab91', 'deep orange', '200', 'deep-orange,lighten-3', $event)" @mousedown.prevent="changeColor('#ffab91', 'deep orange', '200', 'deep-orange,lighten-3', $event)"></a>
+              </td>
+              <td class="deep-orange lighten-2" :class="{
+                      active: hex == 'ff8a65',
+                      'same-hue': color.hue == 'deep orange',
+                      'same-tone': color.value == '300'}" data-hex="ff8a65"><a @click.prevent="changeColor('#ff8a65', 'deep orange', '300', 'deep-orange,lighten-2', $event)" @mousedown.prevent="changeColor('#ff8a65', 'deep orange', '300', 'deep-orange,lighten-2', $event)"></a>
+              </td>
+              <td class="deep-orange lighten-1" :class="{
+                      active: hex == 'ff7043',
+                      'same-hue': color.hue == 'deep orange',
+                      'same-tone': color.value == '400'}" data-hex="ff7043"><a @click.prevent="changeColor('#ff7043', 'deep orange', '400', 'deep-orange,lighten-1', $event)" @mousedown.prevent="changeColor('#ff7043', 'deep orange', '400', 'deep-orange,lighten-1', $event)"></a>
+              </td>
+              <td class="deep-orange undefined" :class="{
+                      active: hex == 'ff5722',
+                      'same-hue': color.hue == 'deep orange',
+                      'same-tone': color.value == '500'}" data-hex="ff5722"><a @click.prevent="changeColor('#ff5722', 'deep orange', '500', 'deep-orange', $event)" @mousedown.prevent="changeColor('#ff5722', 'deep orange', '500', 'deep-orange', $event)"></a>
+              </td>
+              <td class="deep-orange darken-1" :class="{
+                      active: hex == 'f4511e',
+                      'same-hue': color.hue == 'deep orange',
+                      'same-tone': color.value == '600'}" data-hex="f4511e"><a @click.prevent="changeColor('#f4511e', 'deep orange', '600', 'deep-orange,darken-1', $event)" @mousedown.prevent="changeColor('#f4511e', 'deep orange', '600', 'deep-orange,darken-1', $event)"></a>
+              </td>
+              <td class="deep-orange darken-2" :class="{
+                      active: hex == 'e64a19',
+                      'same-hue': color.hue == 'deep orange',
+                      'same-tone': color.value == '700'}" data-hex="e64a19"><a @click.prevent="changeColor('#e64a19', 'deep orange', '700', 'deep-orange,darken-2', $event)" @mousedown.prevent="changeColor('#e64a19', 'deep orange', '700', 'deep-orange,darken-2', $event)"></a>
+              </td>
+              <td class="deep-orange darken-3" :class="{
+                      active: hex == 'd84315',
+                      'same-hue': color.hue == 'deep orange',
+                      'same-tone': color.value == '800'}" data-hex="d84315"><a @click.prevent="changeColor('#d84315', 'deep orange', '800', 'deep-orange,darken-3', $event)" @mousedown.prevent="changeColor('#d84315', 'deep orange', '800', 'deep-orange,darken-3', $event)"></a>
+              </td>
+              <td class="deep-orange darken-4" :class="{
+                      active: hex == 'bf360c',
+                      'same-hue': color.hue == 'deep orange',
+                      'same-tone': color.value == '900'}" data-hex="bf360c"><a @click.prevent="changeColor('#bf360c', 'deep orange', '900', 'deep-orange,darken-4', $event)" @mousedown.prevent="changeColor('#bf360c', 'deep orange', '900', 'deep-orange,darken-4', $event)"></a>
+              </td>
+              <td class="deep-orange accent-1" :class="{
+                      active: hex == 'ff9e80',
+                      'same-hue': color.hue == 'deep orange',
+                      'same-tone': color.value == 'A100'}" data-hex="ff9e80"><a @click.prevent="changeColor('#ff9e80', 'deep orange', 'A100', 'deep-orange,accent-1', $event)" @mousedown.prevent="changeColor('#ff9e80', 'deep orange', 'A100', 'deep-orange,accent-1', $event)"></a>
+              </td>
+              <td class="deep-orange accent-2" :class="{
+                      active: hex == 'ff6e40',
+                      'same-hue': color.hue == 'deep orange',
+                      'same-tone': color.value == 'A200'}" data-hex="ff6e40"><a @click.prevent="changeColor('#ff6e40', 'deep orange', 'A200', 'deep-orange,accent-2', $event)" @mousedown.prevent="changeColor('#ff6e40', 'deep orange', 'A200', 'deep-orange,accent-2', $event)"></a>
+              </td>
+              <td class="deep-orange accent-3" :class="{
+                      active: hex == 'ff3d00',
+                      'same-hue': color.hue == 'deep orange',
+                      'same-tone': color.value == 'A400'}" data-hex="ff3d00"><a @click.prevent="changeColor('#ff3d00', 'deep orange', 'A400', 'deep-orange,accent-3', $event)" @mousedown.prevent="changeColor('#ff3d00', 'deep orange', 'A400', 'deep-orange,accent-3', $event)"></a>
+              </td>
+              <td class="deep-orange accent-4" :class="{
+                      active: hex == 'dd2c00',
+                      'same-hue': color.hue == 'deep orange',
+                      'same-tone': color.value == 'A700'}" data-hex="dd2c00"><a @click.prevent="changeColor('#dd2c00', 'deep orange', 'A700', 'deep-orange,accent-4', $event)" @mousedown.prevent="changeColor('#dd2c00', 'deep orange', 'A700', 'deep-orange,accent-4', $event)"></a>
+              </td>
+            </tr>
+            <tr>
+              <th :class="{ active: 'brown' == color.hue }">brown</th>
+              <td class="brown lighten-5" :class="{
+                      active: hex == 'efebe9',
+                      'same-hue': color.hue == 'brown',
+                      'same-tone': color.value == '50'}" data-hex="efebe9"><a @click.prevent="changeColor('#efebe9', 'brown', '50', 'brown,lighten-5', $event)" @mousedown.prevent="changeColor('#efebe9', 'brown', '50', 'brown,lighten-5', $event)"></a>
+              </td>
+              <td class="brown lighten-4" :class="{
+                      active: hex == 'd7ccc8',
+                      'same-hue': color.hue == 'brown',
+                      'same-tone': color.value == '100'}" data-hex="d7ccc8"><a @click.prevent="changeColor('#d7ccc8', 'brown', '100', 'brown,lighten-4', $event)" @mousedown.prevent="changeColor('#d7ccc8', 'brown', '100', 'brown,lighten-4', $event)"></a>
+              </td>
+              <td class="brown lighten-3" :class="{
+                      active: hex == 'bcaaa4',
+                      'same-hue': color.hue == 'brown',
+                      'same-tone': color.value == '200'}" data-hex="bcaaa4"><a @click.prevent="changeColor('#bcaaa4', 'brown', '200', 'brown,lighten-3', $event)" @mousedown.prevent="changeColor('#bcaaa4', 'brown', '200', 'brown,lighten-3', $event)"></a>
+              </td>
+              <td class="brown lighten-2" :class="{
+                      active: hex == 'a1887f',
+                      'same-hue': color.hue == 'brown',
+                      'same-tone': color.value == '300'}" data-hex="a1887f"><a @click.prevent="changeColor('#a1887f', 'brown', '300', 'brown,lighten-2', $event)" @mousedown.prevent="changeColor('#a1887f', 'brown', '300', 'brown,lighten-2', $event)"></a>
+              </td>
+              <td class="brown lighten-1" :class="{
+                      active: hex == '8d6e63',
+                      'same-hue': color.hue == 'brown',
+                      'same-tone': color.value == '400'}" data-hex="8d6e63"><a @click.prevent="changeColor('#8d6e63', 'brown', '400', 'brown,lighten-1', $event)" @mousedown.prevent="changeColor('#8d6e63', 'brown', '400', 'brown,lighten-1', $event)"></a>
+              </td>
+              <td class="brown undefined" :class="{
+                      active: hex == '795548',
+                      'same-hue': color.hue == 'brown',
+                      'same-tone': color.value == '500'}" data-hex="795548"><a @click.prevent="changeColor('#795548', 'brown', '500', 'brown', $event)" @mousedown.prevent="changeColor('#795548', 'brown', '500', 'brown', $event)"></a>
+              </td>
+              <td class="brown darken-1" :class="{
+                      active: hex == '6d4c41',
+                      'same-hue': color.hue == 'brown',
+                      'same-tone': color.value == '600'}" data-hex="6d4c41"><a @click.prevent="changeColor('#6d4c41', 'brown', '600', 'brown,darken-1', $event)" @mousedown.prevent="changeColor('#6d4c41', 'brown', '600', 'brown,darken-1', $event)"></a>
+              </td>
+              <td class="brown darken-2" :class="{
+                      active: hex == '5d4037',
+                      'same-hue': color.hue == 'brown',
+                      'same-tone': color.value == '700'}" data-hex="5d4037"><a @click.prevent="changeColor('#5d4037', 'brown', '700', 'brown,darken-2', $event)" @mousedown.prevent="changeColor('#5d4037', 'brown', '700', 'brown,darken-2', $event)"></a>
+              </td>
+              <td class="brown darken-3" :class="{
+                      active: hex == '4e342e',
+                      'same-hue': color.hue == 'brown',
+                      'same-tone': color.value == '800'}" data-hex="4e342e"><a @click.prevent="changeColor('#4e342e', 'brown', '800', 'brown,darken-3', $event)" @mousedown.prevent="changeColor('#4e342e', 'brown', '800', 'brown,darken-3', $event)"></a>
+              </td>
+              <td class="brown darken-4" :class="{
+                      active: hex == '3e2723',
+                      'same-hue': color.hue == 'brown',
+                      'same-tone': color.value == '900'}" data-hex="3e2723"><a @click.prevent="changeColor('#3e2723', 'brown', '900', 'brown,darken-4', $event)" @mousedown.prevent="changeColor('#3e2723', 'brown', '900', 'brown,darken-4', $event)"></a>
+              </td>
+            </tr>
+            <tr>
+              <th :class="{ active: 'grey' == color.hue }">grey</th>
+              <td class="grey lighten-5" :class="{
+                      active: hex == 'fafafa',
+                      'same-hue': color.hue == 'grey',
+                      'same-tone': color.value == '50'}" data-hex="fafafa"><a @click.prevent="changeColor('#fafafa', 'grey', '50', 'grey,lighten-5', $event)" @mousedown.prevent="changeColor('#fafafa', 'grey', '50', 'grey,lighten-5', $event)"></a>
+              </td>
+              <td class="grey lighten-4" :class="{
+                      active: hex == 'f5f5f5',
+                      'same-hue': color.hue == 'grey',
+                      'same-tone': color.value == '100'}" data-hex="f5f5f5"><a @click.prevent="changeColor('#f5f5f5', 'grey', '100', 'grey,lighten-4', $event)" @mousedown.prevent="changeColor('#f5f5f5', 'grey', '100', 'grey,lighten-4', $event)"></a>
+              </td>
+              <td class="grey lighten-3" :class="{
+                      active: hex == 'eeeeee',
+                      'same-hue': color.hue == 'grey',
+                      'same-tone': color.value == '200'}" data-hex="eeeeee"><a @click.prevent="changeColor('#eeeeee', 'grey', '200', 'grey,lighten-3', $event)" @mousedown.prevent="changeColor('#eeeeee', 'grey', '200', 'grey,lighten-3', $event)"></a>
+              </td>
+              <td class="grey lighten-2" :class="{
+                      active: hex == 'e0e0e0',
+                      'same-hue': color.hue == 'grey',
+                      'same-tone': color.value == '300'}" data-hex="e0e0e0"><a @click.prevent="changeColor('#e0e0e0', 'grey', '300', 'grey,lighten-2', $event)" @mousedown.prevent="changeColor('#e0e0e0', 'grey', '300', 'grey,lighten-2', $event)"></a>
+              </td>
+              <td class="grey lighten-1" :class="{
+                      active: hex == 'bdbdbd',
+                      'same-hue': color.hue == 'grey',
+                      'same-tone': color.value == '400'}" data-hex="bdbdbd"><a @click.prevent="changeColor('#bdbdbd', 'grey', '400', 'grey,lighten-1', $event)" @mousedown.prevent="changeColor('#bdbdbd', 'grey', '400', 'grey,lighten-1', $event)"></a>
+              </td>
+              <td class="grey undefined" :class="{
+                      active: hex == '9e9e9e',
+                      'same-hue': color.hue == 'grey',
+                      'same-tone': color.value == '500'}" data-hex="9e9e9e"><a @click.prevent="changeColor('#9e9e9e', 'grey', '500', 'grey', $event)" @mousedown.prevent="changeColor('#9e9e9e', 'grey', '500', 'grey', $event)"></a>
+              </td>
+              <td class="grey darken-1" :class="{
+                      active: hex == '757575',
+                      'same-hue': color.hue == 'grey',
+                      'same-tone': color.value == '600'}" data-hex="757575"><a @click.prevent="changeColor('#757575', 'grey', '600', 'grey,darken-1', $event)" @mousedown.prevent="changeColor('#757575', 'grey', '600', 'grey,darken-1', $event)"></a>
+              </td>
+              <td class="grey darken-2" :class="{
+                      active: hex == '616161',
+                      'same-hue': color.hue == 'grey',
+                      'same-tone': color.value == '700'}" data-hex="616161"><a @click.prevent="changeColor('#616161', 'grey', '700', 'grey,darken-2', $event)" @mousedown.prevent="changeColor('#616161', 'grey', '700', 'grey,darken-2', $event)"></a>
+              </td>
+              <td class="grey darken-3" :class="{
+                      active: hex == '424242',
+                      'same-hue': color.hue == 'grey',
+                      'same-tone': color.value == '800'}" data-hex="424242"><a @click.prevent="changeColor('#424242', 'grey', '800', 'grey,darken-3', $event)" @mousedown.prevent="changeColor('#424242', 'grey', '800', 'grey,darken-3', $event)"></a>
+              </td>
+              <td class="grey darken-4" :class="{
+                      active: hex == '212121',
+                      'same-hue': color.hue == 'grey',
+                      'same-tone': color.value == '900'}" data-hex="212121"><a @click.prevent="changeColor('#212121', 'grey', '900', 'grey,darken-4', $event)" @mousedown.prevent="changeColor('#212121', 'grey', '900', 'grey,darken-4', $event)"></a>
+              </td>
+            </tr>
+            <tr>
+              <th :class="{ active: 'blue grey' == color.hue }">blue grey</th>
+              <td class="blue-grey lighten-5" :class="{
+                      active: hex == 'eceff1',
+                      'same-hue': color.hue == 'blue grey',
+                      'same-tone': color.value == '50'}" data-hex="eceff1"><a @click.prevent="changeColor('#eceff1', 'blue grey', '50', 'blue-grey,lighten-5', $event)" @mousedown.prevent="changeColor('#eceff1', 'blue grey', '50', 'blue-grey,lighten-5', $event)"></a>
+              </td>
+              <td class="blue-grey lighten-4" :class="{
+                      active: hex == 'cfd8dc',
+                      'same-hue': color.hue == 'blue grey',
+                      'same-tone': color.value == '100'}" data-hex="cfd8dc"><a @click.prevent="changeColor('#cfd8dc', 'blue grey', '100', 'blue-grey,lighten-4', $event)" @mousedown.prevent="changeColor('#cfd8dc', 'blue grey', '100', 'blue-grey,lighten-4', $event)"></a>
+              </td>
+              <td class="blue-grey lighten-3" :class="{
+                      active: hex == 'b0bec5',
+                      'same-hue': color.hue == 'blue grey',
+                      'same-tone': color.value == '200'}" data-hex="b0bec5"><a @click.prevent="changeColor('#b0bec5', 'blue grey', '200', 'blue-grey,lighten-3', $event)" @mousedown.prevent="changeColor('#b0bec5', 'blue grey', '200', 'blue-grey,lighten-3', $event)"></a>
+              </td>
+              <td class="blue-grey lighten-2" :class="{
+                      active: hex == '90a4ae',
+                      'same-hue': color.hue == 'blue grey',
+                      'same-tone': color.value == '300'}" data-hex="90a4ae"><a @click.prevent="changeColor('#90a4ae', 'blue grey', '300', 'blue-grey,lighten-2', $event)" @mousedown.prevent="changeColor('#90a4ae', 'blue grey', '300', 'blue-grey,lighten-2', $event)"></a>
+              </td>
+              <td class="blue-grey lighten-1" :class="{
+                      active: hex == '78909c',
+                      'same-hue': color.hue == 'blue grey',
+                      'same-tone': color.value == '400'}" data-hex="78909c"><a @click.prevent="changeColor('#78909c', 'blue grey', '400', 'blue-grey,lighten-1', $event)" @mousedown.prevent="changeColor('#78909c', 'blue grey', '400', 'blue-grey,lighten-1', $event)"></a>
+              </td>
+              <td class="blue-grey undefined" :class="{
+                      active: hex == '607d8b',
+                      'same-hue': color.hue == 'blue grey',
+                      'same-tone': color.value == '500'}" data-hex="607d8b"><a @click.prevent="changeColor('#607d8b', 'blue grey', '500', 'blue-grey', $event)" @mousedown.prevent="changeColor('#607d8b', 'blue grey', '500', 'blue-grey', $event)"></a>
+              </td>
+              <td class="blue-grey darken-1" :class="{
+                      active: hex == '546e7a',
+                      'same-hue': color.hue == 'blue grey',
+                      'same-tone': color.value == '600'}" data-hex="546e7a"><a @click.prevent="changeColor('#546e7a', 'blue grey', '600', 'blue-grey,darken-1', $event)" @mousedown.prevent="changeColor('#546e7a', 'blue grey', '600', 'blue-grey,darken-1', $event)"></a>
+              </td>
+              <td class="blue-grey darken-2" :class="{
+                      active: hex == '455a64',
+                      'same-hue': color.hue == 'blue grey',
+                      'same-tone': color.value == '700'}" data-hex="455a64"><a @click.prevent="changeColor('#455a64', 'blue grey', '700', 'blue-grey,darken-2', $event)" @mousedown.prevent="changeColor('#455a64', 'blue grey', '700', 'blue-grey,darken-2', $event)"></a>
+              </td>
+              <td class="blue-grey darken-3" :class="{
+                      active: hex == '37474f',
+                      'same-hue': color.hue == 'blue grey',
+                      'same-tone': color.value == '800'}" data-hex="37474f"><a @click.prevent="changeColor('#37474f', 'blue grey', '800', 'blue-grey,darken-3', $event)" @mousedown.prevent="changeColor('#37474f', 'blue grey', '800', 'blue-grey,darken-3', $event)"></a>
+              </td>
+              <td class="blue-grey darken-4" :class="{
+                      active: hex == '263238',
+                      'same-hue': color.hue == 'blue grey',
+                      'same-tone': color.value == '900'}" data-hex="263238"><a @click.prevent="changeColor('#263238', 'blue grey', '900', 'blue-grey,darken-4', $event)" @mousedown.prevent="changeColor('#263238', 'blue grey', '900', 'blue-grey,darken-4', $event)"></a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="col s12 l5" id="color-info" v-bind:class="{ darken: luminance &lt; 140 }">
+      <div class="row z-depth-1 color-info__background" v-bind:class="color.materializeClass.join(' ')">
+        <div class="col s12">
+          <h3>{{ color.hue }} / {{ color.value }}</h3>
+          <form class="col s12">
+            <div class="row">
+              <div class="col s12">
+                <label>HEX</label>
+              </div>
+              <div class="col s12"><a class="copy-code btn-flat right"><i class="material-icons">content_copy</i></a>
+                <div class="code">#{{ hex }}</div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col s12">
+                <label>RGB</label>
+              </div>
+              <div class="col s12"><a class="copy-code btn-flat right"><i class="material-icons">content_copy</i></a>
+                <div class="code">rgb({{ rgb[0] }}, {{ rgb[1] }}, {{ rgb[2] }})</div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col s12">
+                <label>CSS Background Color</label>
+              </div>
+              <div class="col s12"><a class="copy-code btn-flat right"><i class="material-icons">content_copy</i></a>
+                <div class="code">background-color: rgba({{ rgb[0] }}, {{ rgb[1] }}, {{ rgb[2] }}, 1);</div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col s12">
+                <label>Swift UIColor RGB</label>
+              </div>
+              <div class="col s12"><a class="copy-code btn-flat right"><i class="material-icons">content_copy</i></a>
+                <div class="code">UIColor(red: {{ rgbDouble[0] }}, green: {{ rgbDouble[1] }}, blue: {{ rgbDouble[2] }}, alpha: 1.0)</div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col s12">
+                <label>Materialize css（background color）</label>
+              </div>
+              <div class="col s12"><a class="copy-code btn-flat right"><i class="material-icons">content_copy</i></a>
+                <div class="code">{{ color.materializeClass.join(' ') }}</div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col s12">
+                <label>Materialize css（text color）</label>
+              </div>
+              <div class="col s12"><a class="copy-code btn-flat right"><i class="material-icons">content_copy</i></a>
+                <div class="code">{{ color.materializeTextClass.join(' ') }}</div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/vue/2.3.4/vue.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js'></script>
+<script src='https://cdn.jsdelivr.net/npm/clipboard@1/dist/clipboard.min.js'></script>
+
+  
+
+    <script >
+      // デフォルト値
+var initialStore = {
+  hex: "f44336", // 16進コード
+  color: {
+    hue: "red", // 色相
+    value: "500", // 明度
+    materializeClass: ["red"], // materializeのクラス名
+    materializeTextClass: ["red-text"] // materializeのテキストカラー
+  }
+};
+
+var app = new Vue({
+  el: '#app',
+  data: initialStore,
+
+  methods: {
+    /**
+     * 色を変更する
+     *
+     * @param hex {string} カラーコード
+     * @param hueName {string} 色名（ex. "red", "green"）
+     * @param colorValue {string} 明度(ex. "50", "100", "A100") 
+     * materializeClass {[string]} クラス名の配列
+     * event {Event} イベント
+     */
+    changeColor: function changeColor(hex, hueName, colorValue, materializeClass, event) {
+      this.hex = hex.replace(/^#/, '');
+      this.color.hue = hueName;
+      this.color.value = colorValue;
+      this.color.materializeClass = materializeClass.split(',');
+
+      var textClass = [];
+      materializeClass.split(',').forEach(function (value, index) {
+        if (index === 0) {
+          textClass.push(value + "-text"); // 色相
+        } else if (index === 1) {
+          textClass.push("text-" + value); // 階調
+        }
+      });
+      this.color.materializeTextClass = textClass;
+
+      // if (event.type === 'click') {
+      //   // 詳細にスクロールする
+      //   scrollToInfo();
+      // }
+    }
+  },
+
+  computed: {
+    /**
+     * hexからrgbに変換する
+     *
+     * @return {[number]} RGBの配列
+     */
+    rgb: function rgb() {
+      var hex = this.hex;
+      return [parseInt(hex.substring(0, 2), 16), parseInt(hex.substring(2, 4), 16), parseInt(hex.substring(4, 6), 16)];
+    },
+
+    /**
+     * hexからrgbに変換する（255を1とする）
+     *
+     * @return {[number]} RGBの配列
+     */
+    rgbPer: function rgbPer() {
+      return this.rgb.map(function (value) {
+        return value / 255;
+      });
+    },
+
+    /**
+     * hexからrgbに変換する（255を1.00とする）
+     *
+     * @return {[number]} RGBの配列
+     */
+    rgbDouble: function rgbDouble() {
+      return this.rgbPer.map(function (value) {
+        return value.toFixed(3);
+      });
+    },
+
+    /**
+     * 輝度
+     *
+     * @return {number} 輝度（0〜255）
+     */
+    luminance: function luminance() {
+      var rgb = this.rgb;
+      var r = 0.298912;
+      var g = 0.586611;
+      var b = 0.114478;
+      return Math.floor(r * rgb[0] + g * rgb[1] + b * rgb[2]);
+    }
+  }
+});
+
+//----------------------------------
+//  詳細の位置にスクロール
+//----------------------------------
+var $window = $(window);
+var $info = $('#color-info');
+
+/**
+   * 詳細の位置にスクロール
+   *
+   */
+function scrollToInfo() {
+  var to = $info.offset().top;
+
+  // window scroll don't work for iPhone/iPad
+  if (Math.abs($window.scrollTop() - to) > 150) {
+    $("html, body").dequeue().stop().animate({ scrollTop: to }, 250, 'swing');
+  }
+}
+
+//----------------------------------
+//  コードのボタンをクリックしてコピー
+//----------------------------------
+var clipboard = new Clipboard('.copy-code', {
+  text: function text(trigger) {
+    var $this = $(trigger);
+    return $this.next().text();
+  }
+});
+
+clipboard.on('success', function (e) {
+  // console.info('Action:', e.action);
+  // console.info('Text:', e.text);
+  // console.info('Trigger:', e.trigger);
+
+  Materialize.Toast.removeAll();
+  Materialize.toast("<span class=\"green-text text-lighten-1\">Copied!</span>&nbsp;" + e.text, 5000);
+});
+
+clipboard.on('error', function (e) {
+  Materialize.Toast.removeAll();
+  Materialize.toast('<span class="red-text text-lighten-2">Copy to fail...</span>', 5000);
+});
+
+// // debug
+// const $debug = $('<div></div>');
+// $debug.css({
+//   position: 'fixed',
+//   top: 5,
+//   right: 5,
+//   backgroundColor: 'rgba(255, 255, 255, 0.6)',
+//   border: 'solid 1px #f00'
+// });
+// $('body').append($debug);
+
+
+// TODO 逆引きがしたい
+    </script>
+
+
+
+  
+  
+
+</body>
+
+</html>
+ 
